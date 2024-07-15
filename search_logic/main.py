@@ -49,6 +49,8 @@ def load_data(path):
 def main():
     grid, agent_list, time, gas = load_data('input.txt')
 
+    print(grid)
+
     g = graph.GridGraph(grid)
     s = solution.TestSolution(g, agent_list, grid)
     result = s.solve()
