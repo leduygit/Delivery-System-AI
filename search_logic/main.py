@@ -46,12 +46,12 @@ def load_data(path):
 
 
 
+
 def main():
     grid, agent_list, time, gas = load_data('input.txt')
 
-    print(grid)
-
     g = graph.GridGraph(grid)
+    print(g.get_nodes_values((0, 0)))
     s = solution.TestSolution(g, agent_list, grid)
     result = s.solve()
     print(result)

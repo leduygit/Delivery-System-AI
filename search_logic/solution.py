@@ -1,16 +1,20 @@
 import json
+import heapq
 
 class SolutionBase:
     # storing problem data
-    def __init__(self, graph, agent_list, map_data, gas=None):
+    def __init__(self, graph, agent_list, gas=None):
         self.graph = graph
         self.agent_list = agent_list  # start, goal for each agent
-        self.map_data = map_data
+
         self.gas = gas
         self.move_logs = []  # Placeholder for move logs
 
     def trace_path(self, *args):
         raise NotImplementedError("Subclasses should implement the trace_path method")
+    
+    def get_heuristic(self, *args):
+        raise NotImplementedError("Subclasses should implement the get_heuristic method")
     
     def solve(self):
         raise NotImplementedError("Subclasses should implement the solve method")
@@ -22,39 +26,37 @@ class SolutionBase:
 
 
 class TestSolution(SolutionBase):
-    def __init__(self, graph, agent_list, map_data, gas=None):
-        super().__init__(graph, agent_list, map_data, gas)
-
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
-
+    def __init__(self, graph, agent_list, gas=None):
+        super().__init__(graph, agent_list, gas)
+    
+    
+    def get_heuristic(self, start, goal):
+        # return the manhattan distance between start and goal
+        return abs(start[0] - goal[0]) + abs(start[1] - goal[1])
+    
     def solve(self):
-        # bfs from start to goal
-        start, goal = self.agent_list[0]
-
-        
-        queue = [(start, [start])]
         visited = set()
+        frontier = []
 
-        
-        while queue:
-            current, path = queue.pop(0)
+        start, goal = self.agent_list[0]
+        heapq.heappush(frontier, (0, start, [start]))
+
+        while frontier:
+            cost, current, path = heapq.heappop(frontier)
 
             if current == goal:
-                self.move_logs = self.trace_path(path)
-                return '\n'.join([f'{x} {y}' for x, y in path[1:]])
-            
+                self.move_logs.append(path)
+                return path
 
             visited.add(current)
 
-            for neighbor, _ in self.graph.get_neighbors(current):
-                if neighbor not in visited:
-                    queue.append((neighbor, path + [neighbor]))
+            for neighbor, weight in self.graph.get_neighbors(current):
+                if neighbor not in visited and self.graph.get_nodes_values(neighbor) != '-1':
+                    new_cost = cost + weight
+                    new_path = path + [neighbor]
+                    heapq.heappush(frontier, (new_cost + self.get_heuristic(neighbor, goal), neighbor, new_path))
 
-        return 'FAIL'
+        return None
 
 #implement your solution here
 class LevelSolution:
