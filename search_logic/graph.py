@@ -23,7 +23,7 @@ class GridGraph(Graph):
         self.rows = len(grid)
         self.cols = len(grid[0])
         self.create_edges()
-    
+
     def is_valid(self, x, y):
         return 0 <= x < self.rows and 0 <= y < self.cols and self.grid[x][y] != 1
     
@@ -41,4 +41,3 @@ class GridGraph(Graph):
 
                     if self.is_valid(nx, ny):
                         self.add_edge((x, y), (nx, ny), 1)
-
