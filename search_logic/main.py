@@ -36,6 +36,8 @@ def load_data(path):
                 elif grid[i][j].startswith('G'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
+                if grid[i][j] == '-1':
+                    grid[i][j] = -1
         
         # Validate and store agent positions
         if not start_goal_positions[0] or not start_goal_positions[0]:
@@ -46,28 +48,27 @@ def load_data(path):
 
 
 def main():
-    grid, agent_list, time, gas = load_data('input.txt')
+    grid, agent_list, time, gas = load_data('input2.txt')
 
     g = graph.GridGraph(grid)
     l1 = level1.BasicLevel(g, agent_list, grid)
     
     l1_BFS = l1.BFS()
     print("BFS")
-    print(l1_BFS)
     l1.save_move_logs('l1_BFS.json')
-    print("--------------------")
     l1_DFS = l1.DFS()
     print("DFS")
-    print(l1_DFS)
     l1.save_move_logs('l1_DFS.json')
-    print("--------------------")
-    l1_A = l1.Astar()
+    l1_GBFS = l1.GBFS()
+    print("GBFS")
+    l1.save_move_logs('l1_GBFS.json')
+    l1_UCS = l1.UCS()
+    print("UCS")
+    l1.save_move_logs('l1_UCS.json')
+    l1_Astar = l1.Astar()
     print("A*")
-    print(l1_A)
     l1.save_move_logs('l1_Astar.json')
     
-    
-
 
 if __name__ == '__main__':
     main()

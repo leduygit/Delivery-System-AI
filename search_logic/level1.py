@@ -2,8 +2,8 @@ import solution as sol
 from queue import PriorityQueue as p_queue
 
 class BasicLevel(sol.SolutionBase): #Level 1
-    def __init__(self, graph, agent_list, map_data, gas=None):
-        super().__init__(graph, agent_list, map_data, gas)
+    def __init__(self, graph, agent_list, map_data):
+        super().__init__(graph, agent_list, map_data)
         self.heuristic = self.generate_heuristic(agent_list[0][1])
 
     def trace_path(self, path):
