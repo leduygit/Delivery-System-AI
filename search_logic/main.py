@@ -36,8 +36,8 @@ def load_data(path):
                 elif grid[i][j].startswith('G'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
-                if grid[i][j] == '-1':
-                    grid[i][j] = -1
+                else:
+                    grid[i][j] = int(grid[i][j])
         
         # Validate and store agent positions
         if not start_goal_positions[0] or not start_goal_positions[0]:
