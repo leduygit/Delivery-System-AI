@@ -1,4 +1,4 @@
-import graph, solution as solution
+import graph, solution as solution, level1 as level1
 
 # n m time gas
 # map
@@ -45,15 +45,29 @@ def load_data(path):
 
 
 
-
 def main():
     grid, agent_list, time, gas = load_data('input.txt')
 
     g = graph.GridGraph(grid)
-    s = solution.TestSolution(g, agent_list, grid)
-    result = s.solve()
-    print(result)
-    s.save_move_logs('output.json')
+    l1 = level1.BasicLevel(g, agent_list, grid)
+    
+    l1_BFS = l1.BFS()
+    print("BFS")
+    print(l1_BFS)
+    l1.save_move_logs('l1_BFS.json')
+    print("--------------------")
+    l1_DFS = l1.DFS()
+    print("DFS")
+    print(l1_DFS)
+    l1.save_move_logs('l1_DFS.json')
+    print("--------------------")
+    l1_A = l1.Astar()
+    print("A*")
+    print(l1_A)
+    l1.save_move_logs('l1_Astar.json')
+    
+    
+
 
 if __name__ == '__main__':
     main()
