@@ -1,4 +1,4 @@
-import graph, solution as solution, level1 as level1
+import graph, solution as solution, level1, level2
 
 # n m time gas
 # map
@@ -68,6 +68,12 @@ def main():
     l1_Astar = l1.Astar()
     print("A*")
     l1.save_move_logs('l1_Astar.json')
+    
+    l2 = level2.TimeLimitLevel(g, agent_list, grid, time)
+    l2.solve()
+    print("Time Limit Level")
+    l2.save_move_logs('l2.json')
+    
     
 
 if __name__ == '__main__':
