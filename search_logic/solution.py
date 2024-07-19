@@ -1,5 +1,11 @@
 import json
 
+def cast_to_int(value):
+    try:
+        return int(value)
+    except ValueError:
+        return 0
+
 class SolutionBase:
     def __init__(self, graph, agent_list, map_data, gas=None, time=None):
         self.graph = graph
@@ -15,7 +21,9 @@ class SolutionBase:
                 "position": start,
                 "goal": goal,
                 "reached": start == goal,
-                "path": [start]
+                "path": [start],
+                "fuel": gas,
+                "time": time
             } for start, goal in agent_list
         ]
         self.gas = gas
@@ -23,11 +31,13 @@ class SolutionBase:
         self.visited_states = set()
         self.state_costs = {}  # Dictionary to track the minimum cost for each state
 
-    def agent_state(self, position, goal, reached):
+    def agent_state(self, position, goal, reached, gas, time):
         return {
             "position": position,
             "goal": goal,
-            "reached": reached
+            "reached": reached,
+            "fuel": gas,
+            "time": time
         }
     
     def is_goal_state(self, state):
@@ -38,7 +48,10 @@ class SolutionBase:
         for i, agent in enumerate(state["agents"]):
             turn_log[f"turn {self.turn}"][f"agent_{i+1}"] = {
                 "position": agent["position"],
-                "goal": agent["goal"]
+                "goal": agent["goal"],
+                "reached": agent["reached"],
+                "fuel": agent["fuel"],
+                "time": agent["time"],
             }
         self.data["moves"].append(turn_log)
         self.turn += 1
@@ -51,12 +64,32 @@ class SolutionBase:
         next_states = []
         if not agent["reached"]:
             for neighbor, weight in self.graph.get_neighbors(agent_position):
+                neighbor_value = self.data["map"][neighbor[0]][neighbor[1]]
+                
+                if agent["fuel"] is not None:
+                    neighbor_value = cast_to_int(neighbor_value)
+                    new_gas = agent["fuel"] - neighbor_value
+                    if new_gas < 0:
+                        continue
+                else :
+                    new_gas = agent["fuel"]
+
+                if agent["time"] is not None:
+                    new_time = agent["time"] - 1
+                    if new_time < 0:
+                        continue
+                else:
+                    new_time = agent["time"]
+
+
                 next_agents_state = current_state["agents"][:]
                 next_agents_state[chosen_agent_index] = {
                     "position": neighbor,
                     "goal": agent["goal"],
                     "reached": neighbor == agent["goal"],
-                    "path": agent["path"] + [neighbor]
+                    "path": agent["path"] + [neighbor],
+                    "fuel": new_gas,
+                    "time": new_time
                 }
                 next_states.append({
                     "turn": current_turn + 1,

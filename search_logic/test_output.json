@@ -47,7 +47,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -57,7 +60,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -71,7 +77,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -81,7 +90,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -95,7 +107,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -105,7 +120,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -119,7 +137,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -129,7 +150,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -143,7 +167,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -153,7 +180,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -167,7 +197,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -177,7 +210,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -191,7 +227,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -201,7 +240,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -215,7 +257,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -225,7 +270,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -239,7 +287,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -249,7 +300,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -263,7 +317,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -273,7 +330,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -287,7 +347,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -297,7 +360,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -311,7 +377,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -321,7 +390,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -335,7 +407,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -345,7 +420,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -359,7 +437,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -369,7 +450,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": true,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -383,7 +467,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -393,7 +480,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": true,
+                    "fuel": null,
+                    "time": null
                 }
             }
         },
@@ -407,7 +497,10 @@
                     "goal": [
                         4,
                         4
-                    ]
+                    ],
+                    "reached": true,
+                    "fuel": null,
+                    "time": null
                 },
                 "agent_2": {
                     "position": [
@@ -417,7 +510,10 @@
                     "goal": [
                         4,
                         0
-                    ]
+                    ],
+                    "reached": true,
+                    "fuel": null,
+                    "time": null
                 }
             }
         }
