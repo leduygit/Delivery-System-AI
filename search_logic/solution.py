@@ -1,11 +1,13 @@
 import json
+import graph
 
 class SolutionBase:
     # storing problem data
-    def __init__(self, graph, agent_list, map_data, gas=None):
+    def __init__(self, graph, agent_list, map_data, time=None, gas=None):
         self.graph = graph
         self.agent_list = agent_list  # start, goal for each agent
         self.map_data = map_data
+        self.time = time
         self.gas = gas
         self.move_logs = []  # Placeholder for move logs
 
@@ -35,19 +37,16 @@ class TestSolution(SolutionBase):
         # bfs from start to goal
         start, goal = self.agent_list[0]
 
-        
         queue = [(start, [start])]
         visited = set()
 
-        
         while queue:
             current, path = queue.pop(0)
 
             if current == goal:
                 self.move_logs = self.trace_path(path)
                 return '\n'.join([f'{x} {y}' for x, y in path[1:]])
-            
-
+    
             visited.add(current)
 
             for neighbor, _ in self.graph.get_neighbors(current):
