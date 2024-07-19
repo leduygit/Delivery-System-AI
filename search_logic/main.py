@@ -1,5 +1,5 @@
 import graph, solution as solution, level1, level2
-
+import SampleSolution
 # n m time gas
 # map
 
@@ -53,23 +53,17 @@ def load_data(path):
 def main():
     grid, agent_list, time, gas = load_data('input.txt')
 
-    print(grid)
+    # print(grid)
 
     g = graph.GridGraph(grid)
-    s = solution.TestSolution(g, agent_list, grid)
 
+    s = SampleSolution.TestSolution(g, agent_list, grid)
     s.solve()
-    s.save_move_logs('output.json')
-    # graph = {}  # Example graph
-    # agent_list = [((0, 0), (2, 0)), ((1, 1), (1, 3))]  # Example agents with start and goal positions
-    # map_data = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]  # Example map
+    s.save_to_json('test_output.json')
 
-    # s = solution.TestSolution(graph, agent_list, map_data)
-    # s.solve()
+    heapSolution = SampleSolution.HeapSolution(g, agent_list, grid)
+    heapSolution.solve()
+    heapSolution.save_to_json('heap_output.json')
     
-
-    
-    
-
 if __name__ == '__main__':
     main()

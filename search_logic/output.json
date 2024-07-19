@@ -1,74 +1,83 @@
 {
   "map": [
     ["S", 0, 0, 0, 0],
-    [0, -1, -1, -1, 0],
-    [0, -1, -1, -1, 0],
-    [0, -1, -1, -1, 0],
-    [0, 0, 0, 0, "G"]
+    [-1, 0, -1, -1, 0],
+    [0, 0, 0, 0, 0],
+    [0, -1, -1, 0, 0],
+    [0, 0, 0, -1, "G"]
   ],
-  "moves": {
-    "turn 1": {
-      "agent_1": {
-        "position": [0, 0],
-        "goal": [4, 4],
-        "reached_goal": false
+  "moves": [
+    {
+      "turn 0": {
+        "agent_1": {
+          "position": [0, 0],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 2": {
-      "agent_1": {
-        "position": [1, 0],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 1": {
+        "agent_1": {
+          "position": [0, 1],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 3": {
-      "agent_1": {
-        "position": [2, 0],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 2": {
+        "agent_1": {
+          "position": [1, 1],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 4": {
-      "agent_1": {
-        "position": [3, 0],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 3": {
+        "agent_1": {
+          "position": [2, 1],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 5": {
-      "agent_1": {
-        "position": [4, 0],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 4": {
+        "agent_1": {
+          "position": [2, 2],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 6": {
-      "agent_1": {
-        "position": [4, 1],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 5": {
+        "agent_1": {
+          "position": [2, 3],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 7": {
-      "agent_1": {
-        "position": [4, 2],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 6": {
+        "agent_1": {
+          "position": [3, 3],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 8": {
-      "agent_1": {
-        "position": [4, 3],
-        "goal": [4, 4],
-        "reached_goal": false
+    {
+      "turn 7": {
+        "agent_1": {
+          "position": [3, 4],
+          "goal": [4, 4]
+        }
       }
     },
-    "turn 9": {
-      "agent_1": {
-        "position": [4, 4],
-        "goal": [4, 4],
-        "reached_goal": true
+    {
+      "turn 8": {
+        "agent_1": {
+          "position": [4, 4],
+          "goal": [4, 4]
+        }
       }
     }
-  }
+  ]
 }
