@@ -7,7 +7,7 @@ def cast_to_int(value):
         return 0
 
 class SolutionBase:
-    def __init__(self, graph, agent_list, map_data, gas=None, time=None):
+    def __init__(self, graph, agent_list, map_data, time=None, gas=None):
         self.graph = graph
         self.agent_list = agent_list
         self.data = {
@@ -23,13 +23,13 @@ class SolutionBase:
                 "reached": start == goal,
                 "path": [start],
                 "fuel": gas,
-                "time": time
+                "time": 0
             } for start, goal in agent_list
         ]
         self.gas = gas
         self.time = time
         self.visited_states = set()
-        self.state_costs = {}  # Dictionary to track the minimum cost for each state
+        self.state_costs = {}
 
     def agent_state(self, position, goal, reached, gas, time):
         return {
@@ -67,16 +67,16 @@ class SolutionBase:
                 neighbor_value = self.data["map"][neighbor[0]][neighbor[1]]
                 
                 if agent["fuel"] is not None:
-                    neighbor_value = cast_to_int(neighbor_value)
-                    new_gas = agent["fuel"] - neighbor_value
+                    new_gas = agent["fuel"] - 1
                     if new_gas < 0:
                         continue
                 else :
                     new_gas = agent["fuel"]
 
                 if agent["time"] is not None:
-                    new_time = agent["time"] - 1
-                    if new_time < 0:
+                    neighbor_value = cast_to_int(neighbor_value)
+                    new_time = agent["time"] + neighbor_value + 1
+                    if self.time is not None and new_time > self.time:
                         continue
                 else:
                     new_time = agent["time"]
@@ -93,7 +93,7 @@ class SolutionBase:
                 }
                 next_states.append({
                     "turn": current_turn + 1,
-                    "cost": current_state["cost"] + weight,
+                    "cost": new_time,
                     "agents": next_agents_state,
                     "parent": current_state
                 })

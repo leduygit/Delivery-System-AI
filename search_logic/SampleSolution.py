@@ -3,8 +3,8 @@ from collections import deque
 import heapq
 
 class TestSolution(solution.SolutionBase):
-    def __init__(self, graph, agent_list, map_data):
-        super().__init__(graph, agent_list, map_data)
+    def __init__(self, graph, agent_list, map_data, time = None, gas = None):
+        super().__init__(graph, agent_list, map_data, time, gas)
 
     def initialize_state_list(self):
         return deque()
@@ -19,8 +19,9 @@ class TestSolution(solution.SolutionBase):
 
 
 class HeapSolution(solution.SolutionBase):
-    def __init__(self, graph, agent_list, map_data):
-        super().__init__(graph, agent_list, map_data)
+    def __init__(self, graph, agent_list, map_data, time = None, gas = None):
+        super().__init__(graph, agent_list, map_data, time, gas)
+        self.state_counter = 0  # Unique identifier for each state
 
     def initialize_state_list(self):
         return []
@@ -37,10 +38,11 @@ class HeapSolution(solution.SolutionBase):
         state_key = self.state_to_key(next_state)
         new_cost = next_state["cost"]
         self.state_costs[state_key] = new_cost
-        heapq.heappush(self.state_list, (new_cost + self.get_heuristic(next_state), state_key, next_state))
+        self.state_counter += 1
+        heapq.heappush(self.state_list, (new_cost, self.state_counter, state_key, next_state))
 
     def get_top_state(self):
         if self.state_list:
-            _, _, state = heapq.heappop(self.state_list)
+            _, _, _, state = heapq.heappop(self.state_list)
             return state
         return None

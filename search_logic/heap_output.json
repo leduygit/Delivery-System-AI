@@ -14,14 +14,14 @@
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 0
         },
         "agent_2": {
           "position": [0, 1],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 0
         }
       }
     },
@@ -32,14 +32,14 @@
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 0
         },
         "agent_2": {
           "position": [1, 1],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 1
         }
       }
     },
@@ -50,14 +50,14 @@
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 1
         },
         "agent_2": {
           "position": [1, 1],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 1
         }
       }
     },
@@ -68,158 +68,158 @@
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 1
         },
         "agent_2": {
           "position": [2, 1],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 2
         }
       }
     },
     {
       "turn 4": {
         "agent_1": {
-          "position": [0, 2],
+          "position": [1, 1],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 2
         },
         "agent_2": {
           "position": [2, 1],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 2
         }
       }
     },
     {
       "turn 5": {
         "agent_1": {
-          "position": [0, 2],
+          "position": [1, 1],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 2
         },
         "agent_2": {
           "position": [2, 0],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 3
         }
       }
     },
     {
       "turn 6": {
         "agent_1": {
-          "position": [0, 3],
+          "position": [2, 1],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 3
         },
         "agent_2": {
           "position": [2, 0],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 3
         }
       }
     },
     {
       "turn 7": {
         "agent_1": {
-          "position": [0, 3],
+          "position": [2, 1],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 3
         },
         "agent_2": {
           "position": [3, 0],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 4
         }
       }
     },
     {
       "turn 8": {
         "agent_1": {
-          "position": [0, 4],
+          "position": [2, 2],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 4
         },
         "agent_2": {
           "position": [3, 0],
           "goal": [4, 0],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 4
         }
       }
     },
     {
       "turn 9": {
         "agent_1": {
-          "position": [0, 4],
+          "position": [2, 2],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 4
         },
         "agent_2": {
           "position": [4, 0],
           "goal": [4, 0],
           "reached": true,
           "fuel": null,
-          "time": null
+          "time": 5
         }
       }
     },
     {
       "turn 10": {
         "agent_1": {
-          "position": [1, 4],
+          "position": [2, 3],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 5
         },
         "agent_2": {
           "position": [4, 0],
           "goal": [4, 0],
           "reached": true,
           "fuel": null,
-          "time": null
+          "time": 5
         }
       }
     },
     {
       "turn 11": {
         "agent_1": {
-          "position": [2, 4],
+          "position": [3, 3],
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 6
         },
         "agent_2": {
           "position": [4, 0],
           "goal": [4, 0],
           "reached": true,
           "fuel": null,
-          "time": null
+          "time": 5
         }
       }
     },
@@ -230,14 +230,14 @@
           "goal": [4, 4],
           "reached": false,
           "fuel": null,
-          "time": null
+          "time": 7
         },
         "agent_2": {
           "position": [4, 0],
           "goal": [4, 0],
           "reached": true,
           "fuel": null,
-          "time": null
+          "time": 5
         }
       }
     },
@@ -248,14 +248,14 @@
           "goal": [4, 4],
           "reached": true,
           "fuel": null,
-          "time": null
+          "time": 8
         },
         "agent_2": {
           "position": [4, 0],
           "goal": [4, 0],
           "reached": true,
           "fuel": null,
-          "time": null
+          "time": 5
         }
       }
     }
