@@ -1,15 +1,6 @@
-import graph, solution as solution, level1, level2
-import SampleSolution
-# n m time gas
-# map
-
-# 5 5 -1 -1
-# S 0 0 0 S1
-# 0 1 1 1 0
-# 0 1 1 1 0
-# 0 1 1 1 0
-# G1 0 0 0 G
-
+import graph
+import solution as solution
+import format_output as fo
 
 def load_data(path):
     with open(path, 'r') as f:
@@ -22,7 +13,7 @@ def load_data(path):
             grid.append(f.readline().strip().split())
         
         # Initialize an array to store start ('S') and goal ('G') positions
-        start_goal_positions = [[] for _ in range(10)] 
+        start_goal_positions = [[] for _ in range(10)]
         
         for i in range(n):
             for j in range(m):
@@ -40,30 +31,35 @@ def load_data(path):
                     grid[i][j] = int(grid[i][j])
         
         # Validate and store agent positions
-        if not start_goal_positions[0] or not start_goal_positions[0]:
-            print("Error: Expected at least one 'S' and one 'G' in the grid.")
-
-        # remove empty positins from agent list
+        if not start_goal_positions[0] or len(start_goal_positions[0]) < 2:
+            raise ValueError("Error: Expected at least one 'S' and one 'G' in the grid.")
+        
+        # Remove empty positions from agent list
         start_goal_positions = [positions for positions in start_goal_positions if positions]
         
     return grid, start_goal_positions, time, gas
 
-
-
 def main():
     grid, agent_list, time, gas = load_data('input.txt')
-
-    # print(grid)
+    print(type(time), type(gas))
 
     g = graph.GridGraph(grid)
 
-    s = SampleSolution.TestSolution(g, agent_list, grid)
+    s = solution.TestSolution(g, agent_list, grid)
     s.solve()
-    s.save_to_json('test_output.json')
 
-    heapSolution = SampleSolution.HeapSolution(g, agent_list, grid)
-    heapSolution.solve()
-    heapSolution.save_to_json('heap_output.json')
+    # Save move logs to file
+    s.save_move_logs('moves.txt')
+
+    # Process moves file and create JSON output
+    input_files = [f'agents/agent_{i+1}.txt' for i in range(len(agent_list))]  # Assuming file names are in agents/agent_1.txt, agents/agent_2.txt, etc.
+    output_file = 'output.json'
     
-if __name__ == '__main__':
+    # Create JSON output data
+    data = fo.create_json_output(grid, input_files)
+    
+    # Save JSON to file
+    fo.save_to_json(data, output_file)
+
+if __name__ == "__main__":
     main()
