@@ -1,5 +1,5 @@
 import graph, solution as solution, level1, level2
-
+import SampleSolution
 # n m time gas
 # map
 
@@ -42,41 +42,28 @@ def load_data(path):
         # Validate and store agent positions
         if not start_goal_positions[0] or not start_goal_positions[0]:
             print("Error: Expected at least one 'S' and one 'G' in the grid.")
+
+        # remove empty positins from agent list
+        start_goal_positions = [positions for positions in start_goal_positions if positions]
         
     return grid, start_goal_positions, time, gas
 
 
 
 def main():
-    grid, agent_list, time, gas = load_data('input2.txt')
+    grid, agent_list, time, gas = load_data('input.txt')
 
-    print(grid)
+    # print(grid)
 
     g = graph.GridGraph(grid)
-    l1 = level1.BasicLevel(g, agent_list, grid)
-    
-    l1_BFS = l1.BFS()
-    print("BFS")
-    l1.save_move_logs('l1_BFS.json')
-    l1_DFS = l1.DFS()
-    print("DFS")
-    l1.save_move_logs('l1_DFS.json')
-    l1_GBFS = l1.GBFS()
-    print("GBFS")
-    l1.save_move_logs('l1_GBFS.json')
-    l1_UCS = l1.UCS()
-    print("UCS")
-    l1.save_move_logs('l1_UCS.json')
-    l1_Astar = l1.Astar()
-    print("A*")
-    l1.save_move_logs('l1_Astar.json')
-    
-    l2 = level2.TimeLimitLevel(g, agent_list, grid, time)
-    l2.solve()
-    print("Time Limit Level")
-    l2.save_move_logs('l2.json')
-    
-    
 
+    s = SampleSolution.TestSolution(g, agent_list, grid)
+    s.solve()
+    s.save_to_json('test_output.json')
+
+    heapSolution = SampleSolution.HeapSolution(g, agent_list, grid)
+    heapSolution.solve()
+    heapSolution.save_to_json('heap_output.json')
+    
 if __name__ == '__main__':
     main()
