@@ -12,9 +12,9 @@ class Player:
     def load_images(self):
         for player_num in range(1, 5):
             self.player_images[f'player{player_num - 1}'] = {
-                'left': [pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player{player_num}-left-{i}.png'), PLAYER_IMAGE_SIZE) for i in range(12)],
-                'right': [pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player{player_num}-right-{i}.png'), PLAYER_IMAGE_SIZE) for i in range(12)],
-                'idle': pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player{player_num}-idle.png'), PLAYER_IMAGE_SIZE)
+                'left': [pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player {player_num}/player{player_num}-left-{i}.png'), PLAYER_IMAGE_SIZE) for i in range(12)],
+                'right': [pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player {player_num}/player{player_num}-right-{i}.png'), PLAYER_IMAGE_SIZE) for i in range(12)],
+                'idle': pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player {player_num}/player{player_num}-idle.png'), PLAYER_IMAGE_SIZE)
             }
 
     def get_player_image(self, player_name, direction, frame, is_idle):
