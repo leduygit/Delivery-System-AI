@@ -2,11 +2,12 @@ import json
 
 class SolutionBase:
     # storing problem data
-    def __init__(self, graph, agent_list, map_data, gas=None):
+    def __init__(self, graph, agent_list, map_data, time = None, gas=None):
         self.graph = graph
         self.agent_list = agent_list  # start, goal for each agent
         self.map_data = map_data
         self.gas = gas
+        self.time = time
         self.move_logs = []  # Placeholder for move logs
 
     def trace_path(self, *args):
