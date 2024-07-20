@@ -1,29 +1,17 @@
 import solution as sol
 from queue import PriorityQueue as p_queue
 
-class BasicLevel(sol.SolutionBase): #Level 1
+class BFS(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
-        self.heuristic = self.generate_heuristic(agent_list[0][1])
 
     def trace_path(self, path):
         move_logs = []
         for i in range(len(path)):
             move_logs.append((path[i]))
         return move_logs
-    
-    def generate_heuristic(self, goal): # Manhattan distance
-        rows, cols = len(self.map_data), len(self.map_data[0])
-        heuristics = {}
-
-        for r in range(rows):
-            for c in range(cols):
-                heuristics[(r, c)] = abs(r - goal[0]) + abs(c - goal[1])
-
-        return heuristics
-    
-    #Search Strategies
-    def BFS(self):
+        
+    def solve(self):
         start, goal = self.agent_list[0]
         
         queue = [(start, [start])]
@@ -44,8 +32,18 @@ class BasicLevel(sol.SolutionBase): #Level 1
     
         return 'FAIL'
     
-    
-    def DFS(self):
+
+class DFS(sol.SolutionBase): #Level 1
+    def __init__(self, graph, agent_list, map_data):
+        super().__init__(graph, agent_list, map_data)
+
+    def trace_path(self, path):
+        move_logs = []
+        for i in range(len(path)):
+            move_logs.append((path[i]))
+        return move_logs
+        
+    def solve(self):
         start, goal = self.agent_list[0]
         
         stack = [(start, [start])]
@@ -65,9 +63,19 @@ class BasicLevel(sol.SolutionBase): #Level 1
                     stack.append((neighbor, path + [neighbor]))
     
         return 'FAIL'
+  
     
+class UCS(sol.SolutionBase): #Level 1
+    def __init__(self, graph, agent_list, map_data):
+        super().__init__(graph, agent_list, map_data)
+
+    def trace_path(self, path):
+        move_logs = []
+        for i in range(len(path)):
+            move_logs.append((path[i]))
+        return move_logs
     
-    def UCS(self):
+    def solve(self):
         start, goal = self.agent_list[0]
         
         queue = p_queue()
@@ -89,8 +97,21 @@ class BasicLevel(sol.SolutionBase): #Level 1
     
         return 'FAIL'
     
+class GBFS(sol.SolutionBase): #Level 1
+    def __init__(self, graph, agent_list, map_data):
+        super().__init__(graph, agent_list, map_data)
+
+    def trace_path(self, path):
+        move_logs = []
+        for i in range(len(path)):
+            move_logs.append((path[i]))
+        return move_logs
     
-    def GBFS(self):
+    #return the heuristic value of the current node
+    def get_heuristic(self, node, goal):
+        return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
+    
+    def solve(self):
         start, goal = self.agent_list[0]
         
         queue = p_queue()
@@ -108,12 +129,25 @@ class BasicLevel(sol.SolutionBase): #Level 1
 
             for neighbor, _ in self.graph.get_neighbors(current):
                 if neighbor not in visited:
-                    queue.put((self.heuristic[neighbor], neighbor, path + [neighbor]))
+                    queue.put((self.get_heuristic(neighbor, goal), neighbor, path + [neighbor]))
     
         return 'FAIL'
+
+class Astar(sol.SolutionBase): #Level 1
+    def __init__(self, graph, agent_list, map_data):
+        super().__init__(graph, agent_list, map_data)
+
+    def trace_path(self, path):
+        move_logs = []
+        for i in range(len(path)):
+            move_logs.append((path[i]))
+        return move_logs
     
+    #return the heuristic value of the current node
+    def get_heuristic(self, node, goal):
+        return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
     
-    def Astar(self):
+    def solve(self):
         start, goal = self.agent_list[0]
         
         queue = p_queue()
@@ -129,12 +163,15 @@ class BasicLevel(sol.SolutionBase): #Level 1
             
             visited.add(current)
             
-            cost -= self.heuristic[current]
+            cost -= self.get_heuristic(current, goal)
 
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
-                    queue.put((cost + weight + self.heuristic[neighbor], neighbor, path + [neighbor]))
+                    queue.put((cost + weight + self.get_heuristic(neighbor, goal), neighbor, path + [neighbor]))
     
         return 'FAIL'
+    
+
+
     
     

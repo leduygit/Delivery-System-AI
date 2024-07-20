@@ -1,6 +1,8 @@
 import graph
 import solution
 import SampleSolution as sample
+import level1 as lv1
+import level2 as lv2
 import format_output as fo
 
 def load_data(path):
@@ -47,6 +49,9 @@ def main():
     g = graph.GridGraph(grid)
 
     s = sample.TestSolution(g, agent_list, grid, time, gas)
+    s = lv1.DFS(g, agent_list, grid)
+    s = lv2.TimeLimit(g, agent_list, grid, time)
+
     s.solve()
 
     s.save_move_logs('moves.txt')
