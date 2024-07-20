@@ -12,6 +12,7 @@ class Visualizer:
         pygame.display.set_caption('Delivery-System-AI')
         self.state = self.load_state(FILENAME)
         self.state_ids = list(self.state.keys())
+        # self.state_ids = self.state["moves"]
         self.current_state_index = 0
         self.playing = False
         self.frame_count = 0
@@ -22,9 +23,19 @@ class Visualizer:
             'play_stop': pygame.Rect(GRID_WIDTH * GRID_SIZE + 10, GRID_HEIGHT * GRID_SIZE - BUTTON_HEIGHT - 20, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
             'playing': False
         }
-        self.grid = Grid(self.get_current_grid())
-        self.player = Player()
-        self.sidebar = Sidebar(self.buttons)
+        self.offset = (WINDOW_WIDTH // 2 - GRID_WIDTH * GRID_SIZE // 2, WINDOW_HEIGHT // 2 - GRID_HEIGHT * GRID_SIZE // 2)
+        self.grid = Grid(self.get_current_grid(), self.offset)
+        self.player = Player(self.offset)
+        self.sidebar = Sidebar(self.buttons, self.player.player_images, self.offset)
+
+    def handleSize(self):
+        # map = self.state["map"]
+        # row = len(map)
+        # col = len(map[0])
+        # GRID_SIZE = min(WINDOW_WIDTH // col, WINDOW_HEIGHT // row, 30)
+        # GRID_WIDTH = col
+        # GRID_HEIGHT = row
+        pass
 
     def changeFile(self, FILENAME):
         self.state = self.load_state(FILENAME)
@@ -36,7 +47,7 @@ class Visualizer:
 
     def get_current_grid(self):
         return [row.split() for row in self.state[self.state_ids[self.current_state_index]]['map']['grid']]
-
+    
     def get_players(self):
         return {k: v for k, v in self.state[self.state_ids[self.current_state_index]].items() if k.startswith('player')}
     
