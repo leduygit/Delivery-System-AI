@@ -1,8 +1,8 @@
 import solution
 
 class TestSolution(solution.SolutionBase):
-    def __init__(self, graph, agent_list, map_data, gas=None):
-        super().__init__(graph, agent_list, map_data, gas)
+    def __init__(self, graph, agent_list, map_data, time=None, gas=None):
+        super().__init__(graph, agent_list, map_data, time, gas)
 
     def trace_path(self, path):
         move_logs = []
