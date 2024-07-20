@@ -1,7 +1,7 @@
 # sidebar.py
 import pygame
 from datetime import datetime
-from config import GRAY, BLACK, SIDEBAR_WIDTH, GRID_WIDTH, GRID_HEIGHT, font, GRID_SIZE
+from config import GRAY, BLACK, SIDEBAR_WIDTH, WINDOW_SIZE, font, BUTTON_HEIGHT
 
 class Sidebar:
     def __init__(self, buttons, player_images, offset=(0, 0)):
@@ -9,41 +9,54 @@ class Sidebar:
         self.player_images = player_images
         self.offset = offset
 
-    def draw(self, screen, players, currentstate):
+    def draw(self, screen, players, current_turn_index):
         sidebar_bg_color = GRAY
-        pygame.draw.rect(screen, sidebar_bg_color, (GRID_WIDTH * GRID_SIZE + self.offset[0], self.offset[1], SIDEBAR_WIDTH, GRID_HEIGHT * GRID_SIZE))
-        pygame.draw.rect(screen, BLACK, (GRID_WIDTH * GRID_SIZE + self.offset[0], self.offset[1], SIDEBAR_WIDTH, GRID_HEIGHT * GRID_SIZE), 3)
+        sidebar_x = WINDOW_SIZE[0] - SIDEBAR_WIDTH + self.offset[0]
+        sidebar_y = self.offset[1]
+        sidebar_width = SIDEBAR_WIDTH
+        sidebar_height = WINDOW_SIZE[1]
 
-        state_text = font.render(f"Current state: {currentstate}", True, BLACK)
-        screen.blit(state_text, (GRID_WIDTH * GRID_SIZE + 10 + self.offset[0], 10 + self.offset[1]))
+        # Draw sidebar background
+        pygame.draw.rect(screen, sidebar_bg_color, (sidebar_x, sidebar_y, sidebar_width, sidebar_height))
+
+        # Draw sidebar border
+        pygame.draw.rect(screen, BLACK, (sidebar_x, sidebar_y, sidebar_width, sidebar_height), 2)
+
+        state_text = font.render(f"Current turn: {current_turn_index}", True, BLACK)
+        screen.blit(state_text, (sidebar_x + 10, sidebar_y + 10))
 
         sidebar_text_color = BLACK
         sidebar_line_height = 80
         sidebar_margin_top = 40
-        sidebar_margin_left = GRID_WIDTH * GRID_SIZE + 10
+        sidebar_margin_left = sidebar_x + 10
 
         for idx, (player_name, player_data) in enumerate(players.items()):
             text_y = idx * sidebar_line_height + sidebar_margin_top
-            player_title = font.render(f"Player {idx}:", True, sidebar_text_color)
+            player_title = font.render(f"{player_name}:", True, sidebar_text_color)
             fuel_text = font.render(f"FUEL: {player_data['fuel']}", True, sidebar_text_color)
-            reach_goal_text = font.render(f"Reached Goal: {'True' if player_data['isReachGoal'] else 'False'}", True, sidebar_text_color)
+            reach_goal_text = font.render(f"Reached Goal: {'True' if player_data['reached'] else 'False'}", True, sidebar_text_color)
 
             player_image = pygame.transform.scale(self.player_images[player_name]['idle'], (30, 40))
-            screen.blit(player_image, (sidebar_margin_left + 100 + self.offset[0], text_y + self.offset[1]))
-            screen.blit(player_title, (sidebar_margin_left + self.offset[0], text_y + self.offset[1]))
-            screen.blit(fuel_text, (sidebar_margin_left + self.offset[0], text_y + 20 + self.offset[1]))
-            screen.blit(reach_goal_text, (sidebar_margin_left + self.offset[0], text_y + 40 + self.offset[1]))
+            screen.blit(player_image, (sidebar_margin_left + 100, text_y))
+            screen.blit(player_title, (sidebar_margin_left, text_y))
+            screen.blit(fuel_text, (sidebar_margin_left, text_y + 20))
+            screen.blit(reach_goal_text, (sidebar_margin_left, text_y + 40))
 
-        # Draw buttons with offset
-        # add borders for buttons
-        pygame.draw.rect(screen, pygame.Color('white'), self.buttons['previous'].move(self.offset[0], self.offset[1]))
-        pygame.draw.rect(screen, pygame.Color('white'), self.buttons['next'].move(self.offset[0], self.offset[1]))
-        pygame.draw.rect(screen, pygame.Color('white'), self.buttons['play_stop'].move(self.offset[0], self.offset[1]))
+        button_offset_x = sidebar_x
+        button_offset_y = sidebar_y + sidebar_height - 3 * BUTTON_HEIGHT - 40
+
+        self.buttons['previous'].topleft = (button_offset_x + 10, button_offset_y)
+        self.buttons['next'].topleft = (button_offset_x + 10, button_offset_y + BUTTON_HEIGHT + 10)
+        self.buttons['play_stop'].topleft = (button_offset_x + 10, button_offset_y + 2 * (BUTTON_HEIGHT + 10))
+
+        pygame.draw.rect(screen, pygame.Color('white'), self.buttons['previous'])
+        pygame.draw.rect(screen, pygame.Color('white'), self.buttons['next'])
+        pygame.draw.rect(screen, pygame.Color('white'), self.buttons['play_stop'])
 
         previous_text = font.render('Previous', True, BLACK)
         next_text = font.render('Next', True, BLACK)
         play_stop_text = font.render('Stop' if self.buttons['playing'] else 'Play', True, BLACK)
 
-        screen.blit(previous_text, (self.buttons['previous'].x + 10 + self.offset[0], self.buttons['previous'].y + 10 + self.offset[1]))
-        screen.blit(next_text, (self.buttons['next'].x + 10 + self.offset[0], self.buttons['next'].y + 10 + self.offset[1]))
-        screen.blit(play_stop_text, (self.buttons['play_stop'].x + 10 + self.offset[0], self.buttons['play_stop'].y + 10 + self.offset[1]))
+        screen.blit(previous_text, (self.buttons['previous'].x + 10, self.buttons['previous'].y + 10))
+        screen.blit(next_text, (self.buttons['next'].x + 10, self.buttons['next'].y + 10))
+        screen.blit(play_stop_text, (self.buttons['play_stop'].x + 10, self.buttons['play_stop'].y + 10))
