@@ -1,6 +1,7 @@
 import graph
 import solution as solution
 import format_output as fo
+import level3
 
 def load_data(path):
     with open(path, 'r') as f:
@@ -27,6 +28,8 @@ def load_data(path):
                 elif grid[i][j].startswith('G'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
+                elif grid[i][j].startswith('F'):
+                    grid[i][j] = ('F', int(grid[i][j][1:]))
                 else:
                     grid[i][j] = int(grid[i][j])
         
@@ -40,12 +43,12 @@ def load_data(path):
     return grid, start_goal_positions, time, gas
 
 def main():
-    grid, agent_list, time, gas = load_data('input.txt')
-    print(type(time), type(gas))
+    grid, agent_list, time, gas = load_data('input3.txt')
+    # print(type(time), type(gas))
 
     g = graph.GridGraph(grid)
 
-    s = solution.TestSolution(g, agent_list, grid)
+    s = level3.Level3(g, agent_list, grid, time, gas)
     s.solve()
 
     # Save move logs to file
