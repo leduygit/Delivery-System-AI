@@ -1,5 +1,6 @@
 import graph
-import solution as solution
+import solution
+import SampleSolution as sample
 import format_output as fo
 import level3
 
@@ -47,15 +48,14 @@ def main():
     # print(type(time), type(gas))
 
     g = graph.GridGraph(grid)
-
-    s = level3.Level3(g, agent_list, grid, time, gas)
+    
+    s = sample.TestSolution(g, agent_list, grid, time, gas)
     s.solve()
 
-    # Save move logs to file
     s.save_move_logs('moves.txt')
 
-    # Process moves file and create JSON output
     input_files = [f'agents/agent_{i+1}.txt' for i in range(len(agent_list))]  # Assuming file names are in agents/agent_1.txt, agents/agent_2.txt, etc.
+    #input_files = ['moves.txt']
     output_file = 'output.json'
     
     # Create JSON output data

@@ -8,6 +8,7 @@ class SolutionBase:
         self.map_data = map_data
         self.time = time
         self.gas = gas
+        self.time = time
         self.move_logs = []  # Placeholder for move logs
 
     def trace_path(self, *args):
