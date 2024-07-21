@@ -17,7 +17,7 @@ class Visualizer:
         self.frame_count = 0
         self.clock = pygame.time.Clock()
         self.update_grid_size()
-        self.offset = ((WINDOW_WIDTH - config.GRID_SIZE * len(self.state["map"][0])) / 2, (WINDOW_HEIGHT - config.GRID_SIZE * len(self.state["map"])) / 2)
+        self.offset = ((WINDOW_WIDTH - config.GRID_SIZE * len(self.state["moves"][0]["map"][0])) / 2, (WINDOW_HEIGHT - config.GRID_SIZE * len(self.state["moves"][0]["map"])) / 2)
         print(self.offset)
         self.buttons = {
             'previous': pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
@@ -25,15 +25,18 @@ class Visualizer:
             'play_stop': pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
             'playing': False
         }
-        self.grid = Grid(self.state['map'], offset=self.offset)
+        self.grid = Grid(self.get_current_map(), offset=self.offset)
         self.player = Player(offset=self.offset)
         self.sidebar = Sidebar(self.buttons, self.player.player_images)
 
     def update_grid_size(self):
-        row = len(self.state["map"])
-        col = len(self.state["map"][0])
-        config.GRID_SIZE = min(WINDOW_WIDTH // col, WINDOW_HEIGHT // row)
-        ratio = config.GRID_SIZE / 30
+        print("update_grid_size")
+        row = len(self.state["moves"][0]["map"])
+        col = len(self.state["moves"][0]["map"][0])
+        new_grid_size = min((WINDOW_HEIGHT) // row, (WINDOW_WIDTH) // col)
+        self.offset = ((WINDOW_WIDTH - new_grid_size * col) / 2, (WINDOW_HEIGHT - new_grid_size * row) / 2)
+        ratio = new_grid_size / config.GRID_SIZE
+        config.GRID_SIZE = new_grid_size
         config.PLAYER_IMAGE_SIZE = (config.PLAYER_IMAGE_SIZE[0] * ratio, config.PLAYER_IMAGE_SIZE[1] * ratio)
 
     def load_state(self, filename):
@@ -42,6 +45,9 @@ class Visualizer:
 
     def get_current_turn(self):
         return self.state['moves'][self.current_turn_index][f'turn {self.current_turn_index}']
+
+    def get_current_map(self):
+        return self.state['moves'][self.current_turn_index]['map']
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -66,6 +72,7 @@ class Visualizer:
                 self.buttons['playing'] = False
 
     def draw(self):
+        self.grid = Grid(self.get_current_map(), offset=self.offset)
         self.grid.draw(self.screen)
         self.player.draw(self.screen, self.get_current_turn(), self.frame_count)
         self.sidebar.draw(self.screen, self.get_current_turn(), self.current_turn_index)

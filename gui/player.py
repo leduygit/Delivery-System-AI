@@ -12,7 +12,7 @@ class Player:
         self.offset = offset
 
     def load_images(self):
-        for player_num in range(1, 5):
+        for player_num in range(1, 11):
             self.player_images[f'agent_{player_num}'] = {
                 'left': [pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player {player_num}/player{player_num}-left-{i}.png'), config.PLAYER_IMAGE_SIZE) for i in range(12)],
                 'right': [pygame.transform.scale(pygame.image.load(f'{IMAGE_FOLDER}/Players/player {player_num}/player{player_num}-right-{i}.png'), config.PLAYER_IMAGE_SIZE) for i in range(12)],

@@ -32,7 +32,7 @@ class Sidebar:
 
         for idx, (player_name, player_data) in enumerate(players.items()):
             text_y = idx * sidebar_line_height + sidebar_margin_top
-            player_title = font.render(f"{player_name}:", True, sidebar_text_color)
+            player_title = font.render(f"{player_name[:-1] + str(int(player_name[-1]) - 1)}:", True, sidebar_text_color)
             fuel_text = font.render(f"FUEL: {player_data['fuel']}", True, sidebar_text_color)
             reach_goal_text = font.render(f"Reached Goal: {'True' if player_data['reached'] else 'False'}", True, sidebar_text_color)
 

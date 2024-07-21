@@ -6,6 +6,7 @@ BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 
 PLAYER_COLORS = {
+    "0": (0,255,255),  # CYAN
     "1": (255,0,0),    # RED
     "2": (0,255,0),    # GREEN
     "3": (0,0,255),    # BLUE
@@ -14,11 +15,7 @@ PLAYER_COLORS = {
     "6": (128,128,128),# GREY
     "7": (255,255,255),# WHITE
     "8": (255,255,0),  # YELLOW
-    "9": (0,255,255),  # CYAN
-    "10": (165,42,42)  # BROWN
-    # "" : (102, 25, 113) # purple
-    # dark green: 0, 122, 10 # dark green
-    # peach: 204, 75, 93 # peach
+    "9": (165,42,42)  # BROWN
 }
 
 # Folders
