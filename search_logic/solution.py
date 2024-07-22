@@ -11,6 +11,9 @@ class SolutionBase:
         self.time = time
         self.move_logs = []  # Placeholder for move logs
 
+    def get_level(self):
+        raise NotImplementedError("Subclasses should implement the get_level method")
+
     def trace_path(self, *args):
         raise NotImplementedError("Subclasses should implement the trace_path method")
     
