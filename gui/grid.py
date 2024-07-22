@@ -1,7 +1,6 @@
-# grid.py
 import pygame
-import config
-from config import *
+from gui.config import *
+import gui.config as config
 
 class Grid:
     def __init__(self, grid_data, offset=(0, 0)):

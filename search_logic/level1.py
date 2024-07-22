@@ -1,4 +1,4 @@
-import solution as sol
+import search_logic.solution as sol
 from queue import PriorityQueue as p_queue
 
 class BasicLevel(sol.SolutionBase): #Level 1

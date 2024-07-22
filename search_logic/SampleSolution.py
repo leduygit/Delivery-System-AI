@@ -1,5 +1,5 @@
-import solution
-
+import search_logic.solution as solution
+ 
 class TestSolution(solution.SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None, gas=None):
         super().__init__(graph, agent_list, map_data, time, gas)
