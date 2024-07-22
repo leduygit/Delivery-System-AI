@@ -46,5 +46,5 @@ class GridGraph(Graph):
                         if isinstance(weight, str):
                             weight = 0
                         if isinstance(weight, tuple):
-                            weight = -weight[1] - 1
+                            weight = -weight[1]
                         self.add_edge((x, y), (nx, ny), weight)
