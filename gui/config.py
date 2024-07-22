@@ -3,19 +3,20 @@ import pygame
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+LITE_BLACK = (0, 0, 0, 30)
 GRAY = (200, 200, 200)
 
 PLAYER_COLORS = {
-    "0": (0,255,255),  # CYAN
-    "1": (255,0,0),    # RED
-    "2": (0,255,0),    # GREEN
-    "3": (0,0,255),    # BLUE
-    "4": (255,192,203),# PINK
-    "5": (255,165,0),  # ORANGE
-    "6": (128,128,128),# GREY
-    "7": (255,255,255),# WHITE
-    "8": (255,255,0),  # YELLOW
-    "9": (165,42,42)  # BROWN
+    "0": (0, 255, 255),  # CYAN
+    "1": (255, 0, 0),  # RED
+    "2": (0, 255, 0),  # GREEN
+    "3": (0, 0, 255),  # BLUE
+    "4": (255, 192, 203),  # PINK
+    "5": (255, 165, 0),  # ORANGE
+    "6": (128, 128, 128),  # GREY
+    "7": (255, 255, 255),  # WHITE
+    "8": (255, 255, 0),  # YELLOW
+    "9": (165, 42, 42),  # BROWN
 }
 
 # Folders
@@ -23,7 +24,7 @@ IMAGE_FOLDER = 'Assets/Images'
 
 # Constants
 MAX_WIDTH = 40
-MAX_HEIGHT = 28 # 30 
+MAX_HEIGHT = 28  # 30
 GRID_SIZE = 30
 WINDOW_WIDTH = MAX_WIDTH * 30
 WINDOW_HEIGHT = MAX_HEIGHT * 30
@@ -36,4 +37,4 @@ STATE_DELAY = 30
 
 # Initialize Pygame
 pygame.init()
-font = pygame.font.SysFont('Arial', 18)
+font = pygame.font.SysFont("Arial", 18)

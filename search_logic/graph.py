@@ -40,5 +40,11 @@ class GridGraph(Graph):
                     nx, ny = x + dx, y + dy
 
                     if self.is_valid(nx, ny):
-                        #print(self.grid[nx][ny])
-                        self.add_edge((x, y), (nx, ny), 1)
+                        weight = self.grid[nx][ny]
+                        if isinstance(weight, int):
+                            weight = max(weight, 1)
+                        if isinstance(weight, str):
+                            weight = 0
+                        if isinstance(weight, tuple):
+                            weight = -weight[1]
+                        self.add_edge((x, y), (nx, ny), weight)

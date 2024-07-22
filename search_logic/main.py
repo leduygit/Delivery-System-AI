@@ -28,6 +28,8 @@ def load_data(path):
                 elif grid[i][j].startswith('G'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
+                elif grid[i][j].startswith('F'):
+                    grid[i][j] = ('F', int(grid[i][j][1:]))
                 else:
                     grid[i][j] = int(grid[i][j])
         
@@ -45,7 +47,7 @@ def search_logic():
     print(type(time), type(gas))
 
     g = graph.GridGraph(grid)
-
+    
     s = sample.TestSolution(g, agent_list, grid, time, gas)
     s.solve()
 

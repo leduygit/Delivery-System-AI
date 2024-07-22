@@ -3,7 +3,7 @@ from queue import PriorityQueue as p_queue
 
 class TimeLimitLevel(sol.SolutionBase): #level 2
     def __init__(self, graph, agent_list, map_data, time=None):
-        super().__init__(graph, agent_list, map_data, time)
+        super().__init__(graph, agent_list, map_data, time=time)
         self.heuristic = self.generate_heuristic(agent_list[0][1])
         
     def trace_path(self, path):

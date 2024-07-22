@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module='PIL')
 class Visualizer:
     def __init__(self, FILENAME):
         self.screen = pygame.display.set_mode(WINDOW_SIZE)
-        pygame.display.set_caption('Multi-player Grid Visualization')
+        pygame.display.set_caption("Multi-player Grid Visualization")
         self.state = self.load_state(FILENAME)
         self.current_turn_index = 0
         self.playing = False
@@ -25,10 +25,10 @@ class Visualizer:
 
         # Initialize buttons dictionary
         self.buttons = {
-            'previous': pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
-            'next': pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
-            'play_stop': pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
-            'playing': False
+            "previous": pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
+            "next": pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
+            "play_stop": pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
+            "playing": False,
         }
 
         # Initialize Menu
@@ -69,21 +69,23 @@ class Visualizer:
         print(f"Grid size: {config.GRID_SIZE}, Player image size: {config.PLAYER_IMAGE_SIZE}, Offset: {self.offset}")
 
     def load_state(self, filename):
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             return json.load(f)
 
     def get_current_turn(self):
-        return self.state['moves'][self.current_turn_index][f'turn {self.current_turn_index}']
+        return self.state["moves"][self.current_turn_index][
+            f"turn {self.current_turn_index}"
+        ]
 
     def get_current_map(self):
-        return self.state['moves'][self.current_turn_index]['map']
+        return self.state["moves"][self.current_turn_index]["map"]
 
     def handle_events(self):
         if self.menu_active:
             result = self.menu.handle_events()
-            if result == 'exit':
+            if result == "exit":
                 return False
-            elif result == 'start':
+            elif result == "start":
                 self.menu_active = False
                 return True
         else:
@@ -92,7 +94,7 @@ class Visualizer:
                     return False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos
-                    if self.buttons['previous'].collidepoint(mouse_pos):
+                    if self.buttons["previous"].collidepoint(mouse_pos):
                         self.current_turn_index = max(0, self.current_turn_index - 1)
                         self.buttons['playing'] = False
                         self.update_grid_size()  # Update grid size when changing turns

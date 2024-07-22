@@ -12,8 +12,12 @@ class Menu:
         self.background = pygame.transform.scale(self.background, WINDOW_SIZE)
 
         # Button rectangles for detecting clicks
-        self.start_button_rect = self.start_button.get_rect(center=(WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 - 50))
-        self.exit_button_rect = self.exit_button.get_rect(center=(WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 + 50))
+        self.start_button_rect = self.start_button.get_rect(
+            center=(WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 - 50)
+        )
+        self.exit_button_rect = self.exit_button.get_rect(
+            center=(WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 + 50)
+        )
 
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
@@ -24,11 +28,11 @@ class Menu:
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return 'exit'
+                return "exit"
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 if self.start_button_rect.collidepoint(mouse_pos):
-                    return 'start'
+                    return "start"
                 elif self.exit_button_rect.collidepoint(mouse_pos):
-                    return 'exit'
+                    return "exit"
         return None

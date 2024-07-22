@@ -14,28 +14,56 @@ class Grid:
                 cell_value = str(self.grid_data[row][col])
                 color = WHITE
                 text_color = BLACK
-                border_color = BLACK
+                border_color = LITE_BLACK
 
                 text_value = cell_value
-                if cell_value[0] == 'S' or cell_value[0] == 'G':
+                if cell_value[0] == "S" or cell_value[0] == "G":
                     if len(cell_value) == 1:
-                        cell_value += '1'
+                        cell_value += "1"
                     else:
-                        cell_value = f'{cell_value[0]}{int(cell_value[1]) + 1}'
+                        cell_value = f"{cell_value[0]}{int(cell_value[1]) + 1}"
 
-                if cell_value[0] == 'S':
+                if cell_value[0] == "S":
                     color = PLAYER_COLORS[cell_value[1]]  # Start positions
-                elif cell_value[0] == 'G':
+                elif cell_value[0] == "G":
                     color = PLAYER_COLORS[cell_value[1]]  # Goals
-                elif cell_value == 'F':
+                elif cell_value == "F":
                     color = GRAY  # Fuel stations
-                elif cell_value == '-1':
+                elif cell_value == "-1":
                     color = BLACK  # Obstacles
 
-                pygame.draw.rect(screen, color, (col * config.GRID_SIZE + self.offset[0], row * config.GRID_SIZE + self.offset[1], config.GRID_SIZE, config.GRID_SIZE))
-                pygame.draw.rect(screen, border_color, (col * config.GRID_SIZE + self.offset[0], row * config.GRID_SIZE + self.offset[1], config.GRID_SIZE, config.GRID_SIZE), 2)
+                pygame.draw.rect(
+                    screen,
+                    color,
+                    (
+                        col * config.GRID_SIZE + self.offset[0],
+                        row * config.GRID_SIZE + self.offset[1],
+                        config.GRID_SIZE,
+                        config.GRID_SIZE,
+                    ),
+                )
+                pygame.draw.rect(
+                    screen,
+                    border_color,
+                    (
+                        col * config.GRID_SIZE + self.offset[0],
+                        row * config.GRID_SIZE + self.offset[1],
+                        config.GRID_SIZE,
+                        config.GRID_SIZE,
+                    ),
+                    1,
+                )
 
-                if text_value not in ['-1', '0']:
+                if text_value not in ["-1", "0"]:
                     text_surface = font.render(text_value, True, text_color)
-                    text_rect = text_surface.get_rect(center=(col * config.GRID_SIZE + config.GRID_SIZE // 2 + self.offset[0], row * config.GRID_SIZE + config.GRID_SIZE // 2 + self.offset[1]))
+                    text_rect = text_surface.get_rect(
+                        center=(
+                            col * config.GRID_SIZE
+                            + config.GRID_SIZE // 2
+                            + self.offset[0],
+                            row * config.GRID_SIZE
+                            + config.GRID_SIZE // 2
+                            + self.offset[1],
+                        )
+                    )
                     screen.blit(text_surface, text_rect)
