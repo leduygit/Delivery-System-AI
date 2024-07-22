@@ -14,21 +14,15 @@ class Level3(SolutionBase):
 
     def solve(self):
         start, goal = self.agent_list[0]
-        costs = {(r, c): 100000 for r in range(self.graph.rows)
-                 for c in range(self.graph.cols)}
-        times = {(r, c): 0 for r in range(self.graph.rows)
-                 for c in range(self.graph.cols)}
-        gases = {(r, c): 0 for r in range(self.graph.rows)
-                 for c in range(self.graph.cols)}
+        marked = set()
         pq = PriorityQueue()
         pq.put((0, self.gas, self.time, start, [start]))
-        costs[start] = 0
-        times[start] = self.time
-        gases[start] = self.gas
+        marked.add((start, self.gas, self.time))
 
         while not pq.empty():
             cost, gas, time, current, path = pq.get()
 
+            # print(current, time, gas)
             if current == goal:
                 print('COST:', cost)
                 print('TIME:', time)
@@ -38,26 +32,24 @@ class Level3(SolutionBase):
 
             if len(path) > self.graph.rows * self.graph.cols:
                 continue
-            if time < 1:
+            if time < 0:
                 continue
-            for neighbor, weight in self.graph.get_neighbors(current):
+            for neighbor, ctime in self.graph.get_neighbors(current):
                 newGas = gas - 1
+                if ctime > 1:
+                    print(neighbor, ctime)
                 # Check if neighbor is gas station
-                if weight < 0:
-                    weight = abs(weight)
+                if ctime < 0:
+                    ctime = abs(ctime) + 1
                     newGas = self.gas
 
                 if newGas < 0:
                     continue
-
-                if costs[neighbor] <= cost + weight and \
-                   gases[neighbor] > gas - 1:
+                if (neighbor, newGas, time - ctime) in marked:
                     continue
 
-                costs[neighbor] = cost + weight
-                times[neighbor] = time - 1
-                gases[neighbor] = newGas
-                pq.put((costs[neighbor], newGas, time - 1, neighbor,
+                marked.add((neighbor, newGas, time - ctime))
+                pq.put((cost + 1, newGas, time - ctime, neighbor,
                         path + [neighbor]))
 
         return 'FAIL'
