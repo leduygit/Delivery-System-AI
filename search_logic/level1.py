@@ -170,8 +170,3 @@ class Astar(sol.SolutionBase): #Level 1
                     queue.put((cost + weight + self.get_heuristic(neighbor, goal), neighbor, path + [neighbor]))
     
         return 'FAIL'
-    
-
-
-    
-    
