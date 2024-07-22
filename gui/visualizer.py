@@ -1,18 +1,15 @@
 import pygame
 import json
-import config
-from config import (
-    WINDOW_SIZE,
-    WINDOW_WIDTH,
-    WINDOW_HEIGHT,
-    BUTTON_HEIGHT,
-    SIDEBAR_WIDTH,
-    STATE_DELAY,
-)
-from grid import Grid
-from player import Player
-from sidebar import Sidebar
-from menu import Menu  # Import the Menu class
+import gui.config as config
+from gui.config import *
+from gui.grid import Grid
+from gui.player import Player
+from gui.sidebar import Sidebar
+from gui.menu import Menu  # Import the Menu class
+import warnings
+from PIL import Image
+
+warnings.filterwarnings("ignore", category=UserWarning, module='PIL')
 
 
 class Visualizer:
@@ -25,12 +22,6 @@ class Visualizer:
         self.frame_count = 0
         self.clock = pygame.time.Clock()
         self.update_grid_size()
-        self.offset = (
-            (WINDOW_WIDTH - config.GRID_SIZE * len(self.state["moves"][0]["map"][0]))
-            / 2,
-            (WINDOW_HEIGHT - config.GRID_SIZE * len(self.state["moves"][0]["map"])) / 2,
-        )
-        print(self.offset)
 
         # Initialize buttons dictionary
         self.buttons = {
@@ -50,20 +41,32 @@ class Visualizer:
         self.sidebar = Sidebar(self.buttons, self.player.player_images)
 
     def update_grid_size(self):
-        print("update_grid_size")
-        row = len(self.state["moves"][0]["map"])
-        col = len(self.state["moves"][0]["map"][0])
-        new_grid_size = min((WINDOW_HEIGHT) // row, (WINDOW_WIDTH) // col)
+        current_map = self.get_current_map()
+        self.map_rows = len(current_map)
+        self.map_cols = len(current_map[0])
+        
+        # Calculate new grid size
+        new_grid_size = min(WINDOW_HEIGHT // self.map_rows, WINDOW_WIDTH // self.map_cols)
+        
+        # Calculate new offset
         self.offset = (
-            (WINDOW_WIDTH - new_grid_size * col) / 2,
-            (WINDOW_HEIGHT - new_grid_size * row) / 2,
+            (WINDOW_WIDTH - new_grid_size * self.map_cols) / 2, 
+            (WINDOW_HEIGHT - new_grid_size * self.map_rows) / 2
         )
+        
+        # Calculate ratio for resizing
         ratio = new_grid_size / config.GRID_SIZE
+        
+        # Update global grid size
         config.GRID_SIZE = new_grid_size
+        
+        # Update player image size proportionally
         config.PLAYER_IMAGE_SIZE = (
-            config.PLAYER_IMAGE_SIZE[0] * ratio,
-            config.PLAYER_IMAGE_SIZE[1] * ratio,
+            int(config.PLAYER_IMAGE_SIZE[0] * ratio), 
+            int(config.PLAYER_IMAGE_SIZE[1] * ratio)
         )
+
+        print(f"Grid size: {config.GRID_SIZE}, Player image size: {config.PLAYER_IMAGE_SIZE}, Offset: {self.offset}")
 
     def load_state(self, filename):
         with open(filename, "r") as f:
@@ -93,26 +96,25 @@ class Visualizer:
                     mouse_pos = event.pos
                     if self.buttons["previous"].collidepoint(mouse_pos):
                         self.current_turn_index = max(0, self.current_turn_index - 1)
-                        self.buttons["playing"] = False
-                    elif self.buttons["next"].collidepoint(mouse_pos):
-                        self.current_turn_index = min(
-                            len(self.state["moves"]) - 1, self.current_turn_index + 1
-                        )
-                        self.buttons["playing"] = False
-                    elif self.buttons["play_stop"].collidepoint(mouse_pos):
-                        self.buttons["playing"] = not self.buttons["playing"]
+                        self.buttons['playing'] = False
+                        self.update_grid_size()  # Update grid size when changing turns
+                    elif self.buttons['next'].collidepoint(mouse_pos):
+                        self.current_turn_index = min(len(self.state['moves']) - 1, self.current_turn_index + 1)
+                        self.buttons['playing'] = False
+                        self.update_grid_size()  # Update grid size when changing turns
+                    elif self.buttons['play_stop'].collidepoint(mouse_pos):
+                        self.buttons['playing'] = not self.buttons['playing']
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:  # Check if Escape key is pressed
                         self.menu_active = True  # Return to menu
         return True
 
     def update_state(self):
-        if self.buttons["playing"] and self.frame_count % STATE_DELAY == 0:
-            self.current_turn_index = (self.current_turn_index + 1) % len(
-                self.state["moves"]
-            )
-            if self.current_turn_index == len(self.state["moves"]) - 1:
-                self.buttons["playing"] = False
+        if self.buttons['playing'] and self.frame_count % STATE_DELAY == 0:
+            self.current_turn_index = (self.current_turn_index + 1) % len(self.state['moves'])
+            if self.current_turn_index == len(self.state['moves']) - 1:
+                self.buttons['playing'] = False
+            self.update_grid_size()  # Update grid size when changing state
 
     def draw(self):
         self.grid = Grid(self.get_current_map(), offset=self.offset)
@@ -133,7 +135,7 @@ class Visualizer:
         pygame.quit()
 
 
-if __name__ == "__main__":
-    FILENAME = "../Assets/Json/output.json"
+def visualize():
+    FILENAME = "Assets/Json/output.json"
     visualizer = Visualizer(FILENAME)
     visualizer.run()

@@ -1,13 +1,12 @@
 import pygame
-from config import WINDOW_SIZE
-
+from gui.config import WINDOW_SIZE
 
 class Menu:
     def __init__(self):
         # Load menu images
-        self.background = pygame.image.load("../assets/images/menu/background.png")
-        self.start_button = pygame.image.load("../assets/images/menu/lv1.png")
-        self.exit_button = pygame.image.load("../assets/images/menu/exit.png")
+        self.background = pygame.image.load('Assets/images/menu/background.png')
+        self.start_button = pygame.image.load('Assets/images/menu/lv1.png')
+        self.exit_button = pygame.image.load('Assets/images/menu/exit.png')
 
         # Scale the menu background to fit the window size
         self.background = pygame.transform.scale(self.background, WINDOW_SIZE)

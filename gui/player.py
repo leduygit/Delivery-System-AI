@@ -1,8 +1,7 @@
 # player.py
 import pygame
-from config import FRAME_DELAY, IMAGE_FOLDER
-import config
-
+from gui.config import GRID_SIZE, PLAYER_IMAGE_SIZE, FRAME_DELAY, IMAGE_FOLDER
+import gui.config as config
 
 class Player:
     def __init__(self, offset=(0, 0)):

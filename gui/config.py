@@ -20,7 +20,7 @@ PLAYER_COLORS = {
 }
 
 # Folders
-IMAGE_FOLDER = "../Assets/Images"
+IMAGE_FOLDER = 'Assets/Images'
 
 # Constants
 MAX_WIDTH = 40

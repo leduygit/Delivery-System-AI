@@ -1,8 +1,7 @@
-import graph
-import solution
-import SampleSolution as sample
-import format_output as fo
-import level3
+import search_logic.graph as graph
+import search_logic.SampleSolution as sample
+import search_logic.format_output as fo
+
 
 def load_data(path):
     with open(path, 'r') as f:
@@ -43,26 +42,23 @@ def load_data(path):
         
     return grid, start_goal_positions, time, gas
 
-def main():
-    grid, agent_list, time, gas = load_data('input3.txt')
-    # print(type(time), type(gas))
+def search_logic():
+    grid, agent_list, time, gas = load_data('search_logic/input2.txt')
+    print(type(time), type(gas))
 
     g = graph.GridGraph(grid)
     
     s = sample.TestSolution(g, agent_list, grid, time, gas)
     s.solve()
 
-    s.save_move_logs('moves.txt')
+    s.save_move_logs('search_logic/moves.txt')
 
-    input_files = [f'agents/agent_{i+1}.txt' for i in range(len(agent_list))]  # Assuming file names are in agents/agent_1.txt, agents/agent_2.txt, etc.
-    #input_files = ['moves.txt']
-    output_file = 'output.json'
+    # input_files = [f'agents/agent_{i+1}.txt' for i in range(len(agent_list))]  # Assuming file names are in agents/agent_1.txt, agents/agent_2.txt, etc.
+    input_files = ['search_logic/moves.txt']
+    output_file = 'Assets/Json/output.json'
     
     # Create JSON output data
     data = fo.create_json_output(grid, input_files)
     
     # Save JSON to file
     fo.save_to_json(data, output_file)
-
-if __name__ == "__main__":
-    main()
