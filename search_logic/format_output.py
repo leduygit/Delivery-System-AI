@@ -18,25 +18,26 @@ def get_waiting_time(map_data, position):
         return waiting_time[1]
     return waiting_time
 
-def create_json_output(map_data, agent_files, initial_fuel=None, initial_time=None):
+def create_json_output(map_data, agent_files, agent_list, initial_fuel=None, initial_time=None):
     MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]  # Adjust the size based on the number of agents
     moves = []
     max_turns = 0
     agent_data = {}
+
 
     for i, file in enumerate(agent_files):
         agent_id = f"agent_{i+1}"
         positions = parse_positions_file(file)
         max_turns = max(max_turns, len(positions))
         agent_data[agent_id] = {
-            "goal": positions[-1],
+            "goal": agent_list[i][1],
             "path": positions,
             "fuel": initial_fuel,
             "time": initial_time,
+            "reached": False,  # Track whether the agent has reached its goal
         }
 
     cumulative_positions = {agent_id: [] for agent_id in agent_data.keys()}
-
     cumulative_map = [row.copy() for row in map_data]
 
     total_time = initial_time if initial_time is not None else None
@@ -47,7 +48,7 @@ def create_json_output(map_data, agent_files, initial_fuel=None, initial_time=No
             if turn < len(data["path"]):
                 position = data["path"][turn]
             else:
-                position = data["path"][-1] 
+                position = data["path"][-1]
 
             # Update cumulative positions
             cumulative_positions[agent_id].append(position)
@@ -59,7 +60,7 @@ def create_json_output(map_data, agent_files, initial_fuel=None, initial_time=No
 
             # Calculate waiting time and total time
             waiting_time = get_waiting_time(map_data, position)
-            waiting_time = cast_to_int(waiting_time) 
+            waiting_time = cast_to_int(waiting_time)
 
             # Simulate time
             if total_time is not None:
@@ -72,19 +73,23 @@ def create_json_output(map_data, agent_files, initial_fuel=None, initial_time=No
             if initial_fuel is not None:
                 fuel = max(0, initial_fuel - turn)
             else:
-                fuel = None 
+                fuel = None
+
+            # Check if the agent has reached its goal
+            if position == data["goal"]:
+                data["reached"] = True
 
             turn_data[agent_id] = {
                 "position": position,
                 "goal": data["goal"],
-                "reached": position == data["goal"],
+                "reached": data["reached"],
                 "fuel": fuel,
                 "time": total_time
             }
 
         moves.append({
             f"turn {turn}": turn_data,
-            "map": [row.copy() for row in cumulative_map]  
+            "map": [row.copy() for row in cumulative_map]
         })
 
     return {"moves": moves}

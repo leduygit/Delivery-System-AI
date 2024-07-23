@@ -89,7 +89,7 @@ def run_solutions_on_maps():
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
             # Create JSON output data
-            data = fo.create_json_output(grid, [move_log_path])
+            data = fo.create_json_output(grid, [move_log_path], agent_list)
             
             # Save JSON to file
             fo.save_to_json(data, output_file)

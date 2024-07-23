@@ -17,24 +17,30 @@ def apply_moves(grid, start_position, move, index):
 
 def print_current(positions):
     for i, pos in enumerate(positions):
-        with open('agents/agent_{}.txt'.format(i + 1), 'a') as f:
+        with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'a') as f:
             f.write('{} {}\n'.format(pos[0], pos[1]))
 
 
 def runner():
     grid, start_positions, time, gas = load_data('search_logic/input4.txt')
+
+    print(start_positions)
+    copy_grid = [list(row) for row in grid]
     os.makedirs('agents', exist_ok=True)
     mmap = {
         'grid': grid,
         'height': len(grid),
         'width': len(grid[0]),
     }
+    # [[(1, 1), (7, 8)], [(2, 5), (9, 0)], [(8, 5), (4, 6)]]
     current_positions = [pos[0] for pos in start_positions]
     current_goals = [pos[1] for pos in start_positions]
+    print(current_positions)
+    print(current_goals)
     bots = [RandomBot() for _ in current_positions]
 
     for i, bot in enumerate(bots):
-        with open('agents/agent_{}.txt'.format(i + 1), 'w') as f:
+        with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'w') as f:
             f.write("")
 
     while time:
@@ -55,11 +61,11 @@ def runner():
             print_current(current_positions)
         time -= 1
 
-    input_files = [f'agents/agent_{i+1}.txt' for i in range(len(bots))]
+    input_files = [f'search_logic/agents/agent_{i+1}.txt' for i in range(len(bots))]
     output_file = 'Assets/Json/lv4/output.json'
     
     # Create JSON output data
-    data = fo.create_json_output(grid, input_files)
+    data = fo.create_json_output(copy_grid, input_files, start_positions)
     
     # Save JSON to file
     fo.save_to_json(data, output_file)
