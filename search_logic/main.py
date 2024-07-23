@@ -2,6 +2,7 @@ import search_logic.graph as graph
 import search_logic.SampleSolution as sample
 import search_logic.level1 as lv1
 import search_logic.level2 as lv2
+import search_logic.level3 as lv3
 import search_logic.format_output as fo
 from search_logic.solution import SolutionBase
 import os
@@ -57,7 +58,8 @@ def run_solutions_on_maps():
 
     solutions = [
         ("Level1", lv1.GBFS, ["g", "agent_list", "grid"]),
-        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"])
+        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"]),
+        ("Level3", lv3.Level3, ["g", "agent_list", "grid", "time", "gas"]),
     ]
 
 
@@ -88,7 +90,11 @@ def run_solutions_on_maps():
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
             # Create JSON output data
-            data = fo.create_json_output(grid, [move_log_path])
+            # add gas if this level has gas
+            if solution_name == "Level3":
+                data = fo.create_json_output(grid, [move_log_path], agent_list, gas)
+            else:
+                data = fo.create_json_output(grid, [move_log_path], agent_list)
             
             # Save JSON to file
             fo.save_to_json(data, output_file)
