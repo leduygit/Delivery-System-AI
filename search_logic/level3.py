@@ -1,4 +1,4 @@
-from solution import SolutionBase
+from search_logic.solution import SolutionBase
 from queue import PriorityQueue
 
 

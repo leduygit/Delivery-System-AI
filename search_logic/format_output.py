@@ -13,7 +13,10 @@ def parse_positions_file(filename):
     return positions
 
 def get_waiting_time(map_data, position):
-    return map_data[position[0]][position[1]]
+    waiting_time = map_data[position[0]][position[1]]
+    if isinstance(waiting_time, tuple):
+        return waiting_time[1]
+    return waiting_time
 
 def create_json_output(map_data, agent_files, initial_fuel=None, initial_time=None):
     MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]  # Adjust the size based on the number of agents
