@@ -22,5 +22,8 @@ class SolutionBase:
     
     def save_move_logs(self, filename):
         with open(filename, 'w') as file:
-            file.write('\n'.join([f'{x} {y}' for x, y in self.move_logs]))
+            if  len(self.move_logs) == 0:
+                file.write(self.agent_list[0][0])
+            else:
+                file.write('\n'.join([f'{x} {y}' for x, y in self.move_logs]))
 
