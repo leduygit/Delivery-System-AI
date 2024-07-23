@@ -23,11 +23,17 @@ def load_data(path):
             for j in range(m):
                 if grid[i][j] == 'S':
                     start_goal_positions[0].append((i, j))
+                    if (len(start_goal_positions[0]) > 1):
+                        # reverse the order of the start and goal positions
+                        start_goal_positions[0][0], start_goal_positions[0][1] = start_goal_positions[0][1], start_goal_positions[0][0]
                 elif grid[i][j] == 'G':
                     start_goal_positions[0].append((i, j))
                 elif grid[i][j].startswith('S'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
+                    if (len(start_goal_positions[identifier]) > 1):
+                        # reverse the order of the start and goal positions
+                        start_goal_positions[identifier][0], start_goal_positions[identifier][1] = start_goal_positions[identifier][1], start_goal_positions[identifier][0]
                 elif grid[i][j].startswith('G'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
