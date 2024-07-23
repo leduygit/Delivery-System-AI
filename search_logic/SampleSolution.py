@@ -4,6 +4,9 @@ class TestSolution(solution.SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None, gas=None):
         super().__init__(graph, agent_list, map_data, time, gas)
 
+    def get_level(self):
+        return "lv1"
+
     def trace_path(self, path):
         move_logs = []
         for i in range(len(path)):

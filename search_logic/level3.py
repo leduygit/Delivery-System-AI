@@ -6,6 +6,9 @@ class Level3(SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None, gas=None):
         super().__init__(graph, agent_list, map_data, time=time, gas=gas)
 
+    def get_level(self):
+        return 'lv3'
+
     def trace_path(self, path):
         move_logs = []
         for i in range(len(path)):

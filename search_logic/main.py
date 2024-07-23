@@ -1,7 +1,8 @@
 import search_logic.graph as graph
 import search_logic.SampleSolution as sample
 import search_logic.format_output as fo
-
+import search_logic.level1 as level1
+import search_logic.level2 as level2
 
 def load_data(path):
     with open(path, 'r') as f:
@@ -43,19 +44,19 @@ def load_data(path):
     return grid, start_goal_positions, time, gas
 
 def search_logic():
-    grid, agent_list, time, gas = load_data('search_logic/input2.txt')
+    grid, agent_list, time, gas = load_data('search_logic/input.txt')
     print(type(time), type(gas))
 
     g = graph.GridGraph(grid)
     
-    s = sample.TestSolution(g, agent_list, grid, time, gas)
+    s = sample.TestSolution(g, agent_list, grid, time)
     s.solve()
 
     s.save_move_logs('search_logic/moves.txt')
 
     # input_files = [f'agents/agent_{i+1}.txt' for i in range(len(agent_list))]  # Assuming file names are in agents/agent_1.txt, agents/agent_2.txt, etc.
     input_files = ['search_logic/moves.txt']
-    output_file = 'Assets/Json/output.json'
+    output_file = 'Assets/Json/' + s.get_level() + '/output.json'
     
     # Create JSON output data
     data = fo.create_json_output(grid, input_files)

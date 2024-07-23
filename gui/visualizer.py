@@ -6,6 +6,7 @@ from gui.grid import Grid
 from gui.player import Player
 from gui.sidebar import Sidebar
 from gui.menu import Menu  # Import the Menu class
+from gui.level_page import LevelPage  # Import the LevelPage class
 import warnings
 from PIL import Image
 
@@ -68,6 +69,34 @@ class Visualizer:
 
         print(f"Grid size: {config.GRID_SIZE}, Player image size: {config.PLAYER_IMAGE_SIZE}, Offset: {self.offset}")
 
+    def update_grid_size(self):
+        current_map = self.get_current_map()
+        self.map_rows = len(current_map)
+        self.map_cols = len(current_map[0])
+        
+        # Calculate new grid size
+        new_grid_size = min(WINDOW_HEIGHT // self.map_rows, WINDOW_WIDTH // self.map_cols)
+        
+        # Calculate new offset
+        self.offset = (
+            (WINDOW_WIDTH - new_grid_size * self.map_cols) / 2, 
+            (WINDOW_HEIGHT - new_grid_size * self.map_rows) / 2
+        )
+        
+        # Calculate ratio for resizing
+        ratio = new_grid_size / config.GRID_SIZE
+        
+        # Update global grid size
+        config.GRID_SIZE = new_grid_size
+        
+        # Update player image size proportionally
+        config.PLAYER_IMAGE_SIZE = (
+            int(config.PLAYER_IMAGE_SIZE[0] * ratio), 
+            int(config.PLAYER_IMAGE_SIZE[1] * ratio)
+        )
+
+        print(f"Grid size: {config.GRID_SIZE}, Player image size: {config.PLAYER_IMAGE_SIZE}, Offset: {self.offset}")
+
     def load_state(self, filename):
         with open(filename, "r") as f:
             return json.load(f)
@@ -81,32 +110,24 @@ class Visualizer:
         return self.state["moves"][self.current_turn_index]["map"]
 
     def handle_events(self):
-        if self.menu_active:
-            result = self.menu.handle_events()
-            if result == "exit":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 return False
-            elif result == "start":
-                self.menu_active = False
-                return True
-        else:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = event.pos
-                    if self.buttons["previous"].collidepoint(mouse_pos):
-                        self.current_turn_index = max(0, self.current_turn_index - 1)
-                        self.buttons['playing'] = False
-                        self.update_grid_size()  # Update grid size when changing turns
-                    elif self.buttons['next'].collidepoint(mouse_pos):
-                        self.current_turn_index = min(len(self.state['moves']) - 1, self.current_turn_index + 1)
-                        self.buttons['playing'] = False
-                        self.update_grid_size()  # Update grid size when changing turns
-                    elif self.buttons['play_stop'].collidepoint(mouse_pos):
-                        self.buttons['playing'] = not self.buttons['playing']
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:  # Check if Escape key is pressed
-                        self.menu_active = True  # Return to menu
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                if self.buttons["previous"].collidepoint(mouse_pos):
+                    self.current_turn_index = max(0, self.current_turn_index - 1)
+                    self.buttons['playing'] = False
+                    self.update_grid_size()  # Update grid size when changing turns
+                elif self.buttons['next'].collidepoint(mouse_pos):
+                    self.current_turn_index = min(len(self.state['moves']) - 1, self.current_turn_index + 1)
+                    self.buttons['playing'] = False
+                    self.update_grid_size()  # Update grid size when changing turns
+                elif self.buttons['play_stop'].collidepoint(mouse_pos):
+                    self.buttons['playing'] = not self.buttons['playing']
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # Check if Escape key is pressed
+                    return "menu"
         return True
 
     def update_state(self):
@@ -124,9 +145,13 @@ class Visualizer:
         pygame.display.flip()
 
     def run(self):
-        while self.handle_events():
-            if self.menu_active:
-                self.menu.draw(self.screen)
+        running = True
+        while running:
+            result = self.handle_events()
+            if result == "menu":
+                return "menu"
+            elif not result:
+                running = False
             else:
                 self.update_state()
                 self.draw()
@@ -136,6 +161,48 @@ class Visualizer:
 
 
 def visualize():
-    FILENAME = "Assets/Json/output.json"
-    visualizer = Visualizer(FILENAME)
-    visualizer.run()
+    # Initialize Pygame
+    pygame.init()
+    screen = pygame.display.set_mode(WINDOW_SIZE)
+    pygame.display.set_caption("Delivery system")
+
+    # Initialize Menu and other pages
+    menu = Menu()
+    current_page = menu
+    level_page = None
+    visualizer = None
+
+    # Main game loop
+    running = True
+    while running:
+        
+        if isinstance(current_page, Menu):
+            result = current_page.handle_events()
+            if result == "exit":
+                running = False
+            elif result in ["lv1", "lv2", "lv3", "lv4"]:
+                level_page = LevelPage(result)
+                current_page = level_page
+    
+        elif isinstance(current_page, LevelPage):
+            result = current_page.handle_events()
+            if result == "exit":
+                running = False
+            elif result == "menu":
+                current_page = menu
+            elif result:
+                visualizer = Visualizer(f"Assets/JSON/{result}")
+                current_page = visualizer
+
+        elif isinstance(current_page, Visualizer):
+            result = current_page.run()
+            if result == "menu":
+                current_page = menu
+
+        if isinstance(current_page, Menu) or isinstance(current_page, LevelPage):
+            # current page it's level page handle hover events
+            if isinstance(current_page, LevelPage):
+                current_page.handle_mouse_motion()
+            current_page.draw(screen)
+
+    pygame.quit()

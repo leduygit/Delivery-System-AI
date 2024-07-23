@@ -5,6 +5,9 @@ class TimeLimitLevel(sol.SolutionBase): #level 2
     def __init__(self, graph, agent_list, map_data, time=None):
         super().__init__(graph, agent_list, map_data, time=time)
         self.heuristic = self.generate_heuristic(agent_list[0][1])
+
+    def get_level(self):
+        return 'lv2'
         
     def trace_path(self, path):
         move_logs = []
@@ -22,7 +25,7 @@ class TimeLimitLevel(sol.SolutionBase): #level 2
             for c in range(cols):
                 if self.map_data[r][c] == -1:
                     heuristics[(r, c)] = 1000000
-                elif self.map_data[r][c] != 'S' and self.map_data[r][c] != 'G':
+                elif self.map_data[r][c] != 'S' and self.map_data[r][c] != 'G' and self.map_data[r][c] != 'F1':
                     heuristics[(r, c)] = abs(r - goal[0]) + abs(c - goal[1]) + self.map_data[r][c] + 1
 
         return heuristics
@@ -50,7 +53,7 @@ class TimeLimitLevel(sol.SolutionBase): #level 2
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
                     ntime = 1
-                    if self.map_data[neighbor[0]][neighbor[1]] != 'G':
+                    if self.map_data[neighbor[0]][neighbor[1]] != 'G' and self.map_data[neighbor[0]][neighbor[1]] != 'S' and self.map_data[neighbor[0]][neighbor[1]] != 'F1':
                         ntime += self.map_data[neighbor[0]][neighbor[1]]
                     if (ctime + self.heuristic[neighbor]) > self.time:
                         continue
