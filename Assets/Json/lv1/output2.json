@@ -109,7 +109,7 @@
             ]
         },
         {
-            "turn 1": {
+            "turn 2": {
                 "agent_1": {
                     "position": [
                         1,
@@ -166,7 +166,6 @@
             "turn 3": {
                 "agent_1": {
                     "position": [
-
                         2,
                         1
                     ],

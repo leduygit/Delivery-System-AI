@@ -37,4 +37,4 @@ STATE_DELAY = 30
 
 # Initialize Pygame
 pygame.init()
-font = pygame.font.SysFont("Arial", 18)
+font = pygame.font.SysFont("Roboto", 19)

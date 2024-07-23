@@ -4,16 +4,17 @@ from collections import deque
 
 
 class MapGenerator:
-    def __init__(self, n, clusterSize=3, numClusters=None, favorCorners=False):
-        self.n = n
+    def __init__(self, row, col, clusterSize=3, numClusters=None, favorCorners=False):
+        self.row = row
+        self.col = col
         self.clusterSize = clusterSize
         self.numClusters = (
             numClusters
             if numClusters is not None
-            else (n * n) // (clusterSize * clusterSize)
+            else (row * col) // (clusterSize * clusterSize)
         )
         self.favorCorners = favorCorners
-        self.mapGrid = np.zeros((n, n), dtype=object)
+        self.mapGrid = np.zeros((row, col), dtype=object)
 
     def generateMap(self):
         while True:
@@ -21,24 +22,24 @@ class MapGenerator:
                 self._addCluster()
             if self.isConnected():
                 break
-            self.mapGrid = np.zeros((self.n, self.n), dtype=object)
+            self.mapGrid = np.zeros((self.row, self.col), dtype=object)
         return self.mapGrid
 
     def _addCluster(self):
         clusterLength = random.randint(2, self.clusterSize)
         clusterDirection = random.choice([(0, 1), (1, 0)])  # Horizontal or Vertical
-        startX, startY = random.randint(0, self.n - 1), random.randint(0, self.n - 1)
+        startX, startY = random.randint(0, self.row - 1), random.randint(0, self.col - 1)
 
         for i in range(clusterLength):
             x, y = (
                 startX + i * clusterDirection[0],
                 startY + i * clusterDirection[1],
             )
-            if 0 <= x < self.n and 0 <= y < self.n:
+            if 0 <= x < self.row and 0 <= y < self.col:
                 self.mapGrid[x, y] = -1
 
     def _isValid(self, x, y):
-        return 0 <= x < self.n and 0 <= y < self.n and self.mapGrid[x, y] == 0
+        return 0 <= x < self.row and 0 <= y < self.col and self.mapGrid[x, y] == 0
 
     def _neighbors(self, x, y):
         for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
@@ -48,20 +49,20 @@ class MapGenerator:
     def _checkOpponent(self, x, y):
         for i in range(-1, 2):
             for j in range(-1, 2):
-                if 0 <= x + i < self.n and 0 <= y + j < self.n:
+                if 0 <= x + i < self.row and 0 <= y + j < self.col:
                     if str(self.mapGrid[x + i, y + j]).startswith("S"):
                         return True
         return False
 
     def _favorCornerPositions(self):
         corners = []
-        for i in range(0, self.n, self.n - 1):
-            for j in range(0, self.n, self.n - 1):
+        for i in range(0, self.row, self.row - 1):
+            for j in range(0, self.col, self.col - 1):
                 count = sum(
                     1
                     for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]
-                    if 0 <= i + dx < self.n
-                    and 0 <= j + dy < self.n
+                    if 0 <= i + dx < self.row
+                    and 0 <= j + dy < self.col
                     and str(self.mapGrid[i + dx, j + dy]) != "-1"
                 )
                 if count <= 2:
@@ -71,7 +72,7 @@ class MapGenerator:
     def _randomPosition(self, isStart=False):
         if isStart and self.favorCorners and random.random() < 0.3:
             return self._favorCornerPositions()
-        return random.randint(0, self.n - 1), random.randint(0, self.n - 1)
+        return random.randint(0, self.row - 1), random.randint(0, self.col - 1)
 
     def addStartGoal(self, S="S", G="G"):
         while True:
@@ -82,7 +83,7 @@ class MapGenerator:
                 and not self._checkOpponent(*start)
             ):
                 path = self._bfs(start, goal)
-                if path and len(path) > 1.1 * self.n:
+                if path and len(path) > 1.1 * max(self.row, self.col):
                     self.mapGrid[start[0], start[1]] = S
                     self.mapGrid[goal[0], goal[1]] = G
                     return path
@@ -122,8 +123,8 @@ class MapGenerator:
 
     def isConnected(self):
         visited = set()
-        for x in range(self.n):
-            for y in range(self.n):
+        for x in range(self.row):
+            for y in range(self.col):
                 if self.mapGrid[x, y] == 0:
                     self._markReachable(x, y, visited)
                     break
@@ -132,8 +133,8 @@ class MapGenerator:
 
         return all(
             self.mapGrid[x, y] != 0 or (x, y) in visited
-            for x in range(self.n)
-            for y in range(self.n)
+            for x in range(self.row)
+            for y in range(self.col)
         )
 
     def addPlayers(self, numberPlayers=1):
@@ -144,9 +145,9 @@ class MapGenerator:
 
 if __name__ == "__main__":
     n = 10
-    clusterSize = 3  # size of each obstacle cluster
-    numClusters = 15  # number of clusters
-    mapGen = MapGenerator(n, clusterSize, numClusters)
+    clusterSize = 7  # size of each obstacle cluster
+    numClusters = 50  # number of clusters
+    mapGen = MapGenerator(28, 40, clusterSize, numClusters)
     mapGrid = mapGen.generateMap()
     mapGen.addPlayers(5)
 

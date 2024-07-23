@@ -1,6 +1,4 @@
-# sidebar.py
 import pygame
-from datetime import datetime
 from gui.config import GRAY, BLACK, SIDEBAR_WIDTH, WINDOW_SIZE, font, BUTTON_HEIGHT
 
 class Sidebar:
@@ -28,6 +26,7 @@ class Sidebar:
             screen, BLACK, (sidebar_x, sidebar_y, sidebar_width, sidebar_height), 2
         )
 
+        # Render and draw the current turn text
         state_text = font.render(f"Current turn: {current_turn_index}", True, BLACK)
         screen.blit(state_text, (sidebar_x + 10, sidebar_y + 10))
 

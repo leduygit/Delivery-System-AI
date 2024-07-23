@@ -5,12 +5,15 @@ class Level2(SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None):
         super().__init__(graph, agent_list, map_data, time=time)
 
+    def get_level(self):
+        return 'lv2'
+
     def trace_path(self, path):
         move_logs = []
         for i in range(len(path)):
             move_logs.append((path[i]))
         return move_logs
-    
+      
     def get_heuristic(self, node, goal):
         r = node[0]
         c = node[1]
@@ -39,6 +42,15 @@ class Level2(SolutionBase):
                 print('TIME:', time)
                 self.move_logs = self.trace_path(path)
                 return '\n'.join([f'{x} {y}' for x, y in path[1:]])
+            
+            for neighbor, weight in self.graph.get_neighbors(current):
+                if neighbor not in visited:
+                    ntime = 1
+                    if self.map_data[neighbor[0]][neighbor[1]] != 'G' and self.map_data[neighbor[0]][neighbor[1]] != 'S' and self.map_data[neighbor[0]][neighbor[1]] != 'F1':
+                        ntime += self.map_data[neighbor[0]][neighbor[1]]
+                    if (ctime + self.heuristic[neighbor]) > self.time:
+                        continue
+                    queue.put((cost + weight, ctime + ntime, neighbor, path + [neighbor]))
 
             if len(path) > self.graph.rows * self.graph.cols:
                 continue
