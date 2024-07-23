@@ -2,6 +2,7 @@ import search_logic.graph as graph
 import search_logic.SampleSolution as sample
 import search_logic.level1 as lv1
 import search_logic.level2 as lv2
+import search_logic.level3 as lv3
 import search_logic.format_output as fo
 import search_logic.level1 as level1
 import search_logic.level2 as level2
@@ -46,7 +47,7 @@ def load_data(path):
     return grid, start_goal_positions, time, gas
 
 def search_logic():
-    grid, agent_list, time, gas = load_data('search_logic/input.txt')
+    grid, agent_list, time, gas = load_data('search_logic/input3.txt')
 
     print(type(time), type(gas))
 
@@ -54,7 +55,7 @@ def search_logic():
     
     #s = sample.TestSolution(g, agent_list, grid, time, gas)
     #s = lv1.GBFS(g, agent_list, grid)
-    s = lv2.Level2(g, agent_list, grid, time)   
+    s = lv3.Level3(g, agent_list, grid, time, gas)   
     s.solve()
 
     s.save_move_logs('search_logic/moves.txt')
