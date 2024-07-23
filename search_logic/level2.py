@@ -1,54 +1,47 @@
-import search_logic.solution as sol
+from search_logic.solution import SolutionBase
 from queue import PriorityQueue as p_queue
-
-class TimeLimitLevel(sol.SolutionBase): #level 2
+    
+class Level2(SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None):
         super().__init__(graph, agent_list, map_data, time=time)
-        self.heuristic = self.generate_heuristic(agent_list[0][1])
 
     def get_level(self):
         return 'lv2'
-        
+
     def trace_path(self, path):
         move_logs = []
         for i in range(len(path)):
             move_logs.append((path[i]))
         return move_logs
-    
-    def generate_heuristic(self, goal): # Manhattan distance
-        rows, cols = len(self.map_data), len(self.map_data[0])
-        heuristics = {}
-        
-        heuristics[goal] = 0
+      
+    def get_heuristic(self, node, goal):
+        r = node[0]
+        c = node[1]
+        if self.map_data[r][c] == -1:
+            return 1000000
+        if isinstance(self.map_data[r][c], int):
+            return abs(r - goal[0]) + abs(c - goal[1]) + self.map_data[r][c] + 1
+        return abs(r - goal[0]) + abs(c - goal[1])
 
-        for r in range(rows):
-            for c in range(cols):
-                if self.map_data[r][c] == -1:
-                    heuristics[(r, c)] = 1000000
-                elif self.map_data[r][c] != 'S' and self.map_data[r][c] != 'G' and self.map_data[r][c] != 'F1':
-                    heuristics[(r, c)] = abs(r - goal[0]) + abs(c - goal[1]) + self.map_data[r][c] + 1
-
-        return heuristics
-        
-    #shortest path under time limit 
-    #UCS with 2 priorities: cost and time
     def solve(self):
         start, goal = self.agent_list[0]
-        
-        queue = p_queue()
-        queue.put((0, 0, start, [start]))
-        visited = set()
-        
-        while not queue.empty():
-            cost, ctime, current, path = queue.get()
-                
+        marked = set()
+        pq = p_queue()
+        pq.put((0, self.time, start, [start]))
+        marked.add((start, self.time))
+
+        while not pq.empty():
+            cost, time, current, path = pq.get()
+            
+            if time < 0:
+                continue
+
+            # print(current, time, gas)
             if current == goal:
                 print('COST:', cost)
-                print('TIME:', ctime)
+                print('TIME:', time)
                 self.move_logs = self.trace_path(path)
                 return '\n'.join([f'{x} {y}' for x, y in path[1:]])
-            
-            visited.add(current)
             
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
@@ -59,6 +52,16 @@ class TimeLimitLevel(sol.SolutionBase): #level 2
                         continue
                     queue.put((cost + weight, ctime + ntime, neighbor, path + [neighbor]))
 
-        if self.time is not None and self.time < cost:
-            return 'TIMEOUT'
+            if len(path) > self.graph.rows * self.graph.cols:
+                continue
+        
+            for neighbor, ctime in self.graph.get_neighbors(current):
+                if (self.map_data[neighbor[0]][neighbor[1]] != 0):
+                        ctime += 1
+                if (neighbor, time - ctime) in marked:
+                    continue
+                marked.add((neighbor, time - ctime))
+                pq.put((cost + 1, time - ctime, neighbor,
+                        path + [neighbor]))
+
         return 'FAIL'

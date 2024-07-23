@@ -14,6 +14,19 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        0,
+                        1
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
@@ -68,13 +81,26 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        0,
+                        2
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
@@ -109,7 +135,7 @@
             ]
         },
         {
-            "turn 1": {
+            "turn 2": {
                 "agent_1": {
                     "position": [
                         1,
@@ -122,20 +148,33 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        1,
+                        2
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -166,7 +205,6 @@
             "turn 3": {
                 "agent_1": {
                     "position": [
-
                         2,
                         1
                     ],
@@ -177,20 +215,33 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        2,
+                        3
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -198,7 +249,7 @@
                     0,
                     "S",
                     0,
-                    0,
+                    "S1",
                     0
                 ],
                 [
@@ -231,20 +282,33 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        2,
+                        4
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -252,8 +316,8 @@
                     0,
                     "S",
                     "S",
-                    0,
-                    0
+                    "S1",
+                    "S1"
                 ],
                 [
                     0,
@@ -285,20 +349,33 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        3,
+                        4
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -307,14 +384,14 @@
                     "S",
                     "S",
                     "S",
-                    0
+                    "S1"
                 ],
                 [
                     0,
                     -1,
                     -1,
                     0,
-                    0
+                    "S1"
                 ],
                 [
                     "G1",
@@ -339,20 +416,33 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        4,
+                        4
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -361,21 +451,21 @@
                     "S",
                     "S",
                     "S",
-                    0
+                    "S1"
                 ],
                 [
                     0,
                     -1,
                     -1,
                     "S",
-                    0
+                    "S1"
                 ],
                 [
                     "G1",
                     0,
                     0,
                     -1,
-                    "G"
+                    "S1"
                 ]
             ]
         },
@@ -393,20 +483,33 @@
                     "reached": false,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        4,
+                        3
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": false,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -415,7 +518,7 @@
                     "S",
                     "S",
                     "S",
-                    0
+                    "S1"
                 ],
                 [
                     0,
@@ -428,8 +531,8 @@
                     "G1",
                     0,
                     0,
-                    -1,
-                    "G"
+                    "S1",
+                    "S1"
                 ]
             ]
         },
@@ -447,20 +550,33 @@
                     "reached": true,
                     "fuel": null,
                     "time": null
+                },
+                "agent_2": {
+                    "position": [
+                        4,
+                        2
+                    ],
+                    "goal": [
+                        4,
+                        2
+                    ],
+                    "reached": true,
+                    "fuel": null,
+                    "time": null
                 }
             },
             "map": [
                 [
                     "S",
                     "S",
-                    0,
+                    "S1",
                     0,
                     0
                 ],
                 [
                     -1,
                     "S",
-                    -1,
+                    "S1",
                     -1,
                     0
                 ],
@@ -469,7 +585,7 @@
                     "S",
                     "S",
                     "S",
-                    0
+                    "S1"
                 ],
                 [
                     0,
@@ -481,8 +597,8 @@
                 [
                     "G1",
                     0,
-                    0,
-                    -1,
+                    "S1",
+                    "S1",
                     "S"
                 ]
             ]
