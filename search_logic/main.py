@@ -4,8 +4,10 @@ import search_logic.level1 as lv1
 import search_logic.level2 as lv2
 import search_logic.level3 as lv3
 import search_logic.format_output as fo
-import search_logic.level1 as level1
-import search_logic.level2 as level2
+from search_logic.solution import SolutionBase
+import os
+
+from search_logic.map_config import *
 
 def load_data(path):
     with open(path, 'r') as f:
@@ -24,11 +26,17 @@ def load_data(path):
             for j in range(m):
                 if grid[i][j] == 'S':
                     start_goal_positions[0].append((i, j))
+                    if len(start_goal_positions[0]) > 1:
+                        # reverse the order of the start and goal positions
+                        start_goal_positions[0][0], start_goal_positions[0][1] = start_goal_positions[0][1], start_goal_positions[0][0]
                 elif grid[i][j] == 'G':
                     start_goal_positions[0].append((i, j))
                 elif grid[i][j].startswith('S'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
+                    if len(start_goal_positions[identifier]) > 1:
+                        # reverse the order of the start and goal positions
+                        start_goal_positions[identifier][0], start_goal_positions[identifier][1] = start_goal_positions[identifier][1], start_goal_positions[identifier][0]
                 elif grid[i][j].startswith('G'):
                     identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
@@ -46,26 +54,43 @@ def load_data(path):
         
     return grid, start_goal_positions, time, gas
 
-def search_logic():
-    grid, agent_list, time, gas = load_data('search_logic/input3.txt')
+def run_solutions_on_maps():
 
-    print(type(time), type(gas))
+    solutions = [
+        ("Level1", lv1.GBFS, ["g", "agent_list", "grid"]),
+        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"])
+    ]
 
-    g = graph.GridGraph(grid)
-    
-    #s = sample.TestSolution(g, agent_list, grid, time, gas)
-    #s = lv1.GBFS(g, agent_list, grid)
-    s = lv3.Level3(g, agent_list, grid, time, gas)   
-    s.solve()
 
-    s.save_move_logs('search_logic/moves.txt')
+    for map_name in MAP_NAME:
+        input_path = f'search_logic/{map_name}.txt'
+        grid, agent_list, time, gas = load_data(input_path)
+        g = graph.GridGraph(grid)
 
-    # input_files = [f'agents/agent_{i+1}.txt' for i in range(len(agent_list))]  # Assuming file names are in agents/agent_1.txt, agents/agent_2.txt, etc.
-    input_files = ['search_logic/moves.txt']
-    output_file = 'Assets/Json/' + s.get_level() + '/output.json'
-    
-    # Create JSON output data
-    data = fo.create_json_output(grid, input_files)
-    
-    # Save JSON to file
-    fo.save_to_json(data, output_file)
+        for solution_name, SolutionClass, init_args in solutions:
+            print(f'Running {solution_name} on {map_name}')
+            
+            # Dynamically prepare the arguments
+            init_args_values = {
+                "g": g,
+                "agent_list": agent_list,
+                "grid": grid,
+                "time": time,
+                "gas": gas
+            }
+            args = [init_args_values[arg] for arg in init_args]
+            solution = SolutionClass(*args)
+
+            solution.solve()
+            move_log_path = 'search_logic/move.txt'
+            solution.save_move_logs(move_log_path)
+
+            output_file = os.path.join('Assets/Json/', solution.get_level(), f'{map_name}.json')
+            os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+            # Create JSON output data
+            data = fo.create_json_output(grid, [move_log_path])
+            
+            # Save JSON to file
+            fo.save_to_json(data, output_file)
+

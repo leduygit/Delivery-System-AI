@@ -42,16 +42,7 @@ class Level2(SolutionBase):
                 print('TIME:', time)
                 self.move_logs = self.trace_path(path)
                 return '\n'.join([f'{x} {y}' for x, y in path[1:]])
-            
-            for neighbor, weight in self.graph.get_neighbors(current):
-                if neighbor not in visited:
-                    ntime = 1
-                    if self.map_data[neighbor[0]][neighbor[1]] != 'G' and self.map_data[neighbor[0]][neighbor[1]] != 'S' and self.map_data[neighbor[0]][neighbor[1]] != 'F1':
-                        ntime += self.map_data[neighbor[0]][neighbor[1]]
-                    if (ctime + self.heuristic[neighbor]) > self.time:
-                        continue
-                    queue.put((cost + weight, ctime + ntime, neighbor, path + [neighbor]))
-
+        
             if len(path) > self.graph.rows * self.graph.cols:
                 continue
         

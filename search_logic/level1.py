@@ -4,6 +4,9 @@ from queue import PriorityQueue as p_queue
 class BFS(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
+        
+    def get_level(self):
+        return 'lv1'
 
     def trace_path(self, path):
         move_logs = []
@@ -36,6 +39,9 @@ class BFS(sol.SolutionBase): #Level 1
 class DFS(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
+        
+    def get_level(self):
+        return 'lv1'
 
     def trace_path(self, path):
         move_logs = []
@@ -68,6 +74,9 @@ class DFS(sol.SolutionBase): #Level 1
 class UCS(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
+        
+    def get_level(self):
+        return 'lv1'
 
     def trace_path(self, path):
         move_logs = []
@@ -93,6 +102,8 @@ class UCS(sol.SolutionBase): #Level 1
 
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
+                    if (self.map_data[neighbor[0]][neighbor[1]] != 0):
+                        weight += 1
                     queue.put((cost + weight, neighbor, path + [neighbor]))
     
         return 'FAIL'
@@ -100,6 +111,9 @@ class UCS(sol.SolutionBase): #Level 1
 class GBFS(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
+
+    def get_level(self):
+        return 'lv1'
 
     def trace_path(self, path):
         move_logs = []
@@ -136,6 +150,9 @@ class GBFS(sol.SolutionBase): #Level 1
 class Astar(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
+        
+    def get_level(self):
+        return 'lv1'
 
     def trace_path(self, path):
         move_logs = []
@@ -167,6 +184,8 @@ class Astar(sol.SolutionBase): #Level 1
 
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
+                    if (self.map_data[neighbor[0]][neighbor[1]] != 0):
+                        weight += 1
                     queue.put((cost + weight + self.get_heuristic(neighbor, goal), neighbor, path + [neighbor]))
     
         return 'FAIL'
