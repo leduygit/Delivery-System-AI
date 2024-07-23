@@ -58,7 +58,8 @@ def run_solutions_on_maps():
 
     solutions = [
         ("Level1", lv1.GBFS, ["g", "agent_list", "grid"]),
-        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"])
+        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"]),
+        ("Level3", lv3.Level3, ["g", "agent_list", "grid", "time", "gas"]),
     ]
 
 
@@ -89,7 +90,11 @@ def run_solutions_on_maps():
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
             # Create JSON output data
-            data = fo.create_json_output(grid, [move_log_path], agent_list)
+            # add gas if this level has gas
+            if solution_name == "Level3":
+                data = fo.create_json_output(grid, [move_log_path], agent_list, gas)
+            else:
+                data = fo.create_json_output(grid, [move_log_path], agent_list)
             
             # Save JSON to file
             fo.save_to_json(data, output_file)

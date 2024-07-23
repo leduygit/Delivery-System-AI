@@ -13,6 +13,7 @@ class Level3(SolutionBase):
         move_logs = []
         for i in range(len(path)):
             move_logs.append((path[i]))
+        print(move_logs)
         return move_logs
 
     def solve(self):
