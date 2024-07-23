@@ -19,7 +19,7 @@ class LevelPage:
 
         # Dropdown configuration
         self.font = pygame.freetype.Font('Assets/Images/Menu/amongus.ttf', 30)  # Load custom font
-        self.dropdown_rect = pygame.Rect(WINDOW_SIZE[0] // 2 - 150, WINDOW_SIZE[1] // 2 - 25, 300, 50)  # Larger dropdown
+        self.dropdown_rect = pygame.Rect(WINDOW_SIZE[0] // 2 - 150, WINDOW_SIZE[1] // 3, 300, 50)  # Larger dropdown
         self.dropdown_height = 0
         self.max_height = 50 * len(self.files)  # Calculate max height based on number of items
 

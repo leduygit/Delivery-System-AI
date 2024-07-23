@@ -101,6 +101,9 @@ class GBFS(sol.SolutionBase): #Level 1
     def __init__(self, graph, agent_list, map_data):
         super().__init__(graph, agent_list, map_data)
 
+    def get_level(self):
+        return 'lv1'
+
     def trace_path(self, path):
         move_logs = []
         for i in range(len(path)):
