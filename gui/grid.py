@@ -19,13 +19,13 @@ class Grid:
         self.road_image = pygame.transform.scale(
             self.road_image, (config.GRID_SIZE, config.GRID_SIZE)
         )
-        self.fuel_image = pygame.image.load(config.FUEL_FOLDER + "/fuel_station.png")
-        MAX = max(
-                    self.fuel_image.get_height() / config.GRID_SIZE,
-                    self.fuel_image.get_width() / config.GRID_SIZE,
+        self.fuel_image = pygame.image.load(config.FUEL_FOLDER + "/fuel.png")
+        MIN = min(
+                    config.GRID_SIZE / self.fuel_image.get_height(),
+                    config.GRID_SIZE / self.fuel_image.get_width(),
                 )
         self.fuel_image = pygame.transform.scale(
-            self.fuel_image, (int(self.fuel_image.get_width() / MAX), int(self.fuel_image.get_height() / MAX))
+            self.fuel_image, (int(self.fuel_image.get_width() * MIN), int(self.fuel_image.get_height() * MIN))
         )
 
     def load_flags(self, folder):
@@ -41,7 +41,6 @@ class Grid:
                 img = pygame.transform.scale(
                     img, (int(img.get_width() / MAX), int(img.get_height() / MAX))
                 )
-                # img = pygame.transform.scale(img, (config.GRID_SIZE/2, config.GRID_SIZE/2))
                 for text in ["start", "goal"]:
                     if text in filename:
                         if filename[-5] not in flags:
@@ -85,7 +84,6 @@ class Grid:
         screen.fill(WHITE)
         for row in range(len(self.grid_data)):
             for col in range(len(self.grid_data[row])):
-                # check type self.grid_data[row][col]
                 screen.blit(
                     self.road_image,
                     (
@@ -102,14 +100,13 @@ class Grid:
                                 row * config.GRID_SIZE + self.offset[1] + (config.GRID_SIZE - self.fuel_image.get_height()) / 2,
                             ),
                         )
+                        self._draw_text(screen, self.grid_data[row][col][1], row, col, (-2, +2))
                         continue
                 cell_value = str(self.grid_data[row][col])
                 color = WHITE
-                text_color = BLACK
                 border_color = LITE_BLACK
 
                 text_value = cell_value
-                isObstacle = False
                 if cell_value[0] == "S" or cell_value[0] == "G":
                     if len(cell_value) == 1:
                         cell_value += "1"
@@ -153,39 +150,32 @@ class Grid:
                 )
                 # check if text_value is integer
                 if text_value.isdigit() and text_value not in ["-1", "0"]:
-                    text_surface = self.dynamic_font.render(
-                        text_value, True, text_color
-                    )
-                    text_rect = text_surface.get_rect(
-                        center=(
-                            col * config.GRID_SIZE
-                            + config.GRID_SIZE // 2
-                            + self.offset[0],
-                            row * config.GRID_SIZE
-                            + config.GRID_SIZE // 2
-                            + self.offset[1],
-                        )
-                    )
-                    screen.blit(text_surface, text_rect)
+                    self._draw_text(screen, text_value, row, col)
 
+        self._draw_flags(screen)
+
+    def _draw_flags(self, screen):
         for player in self.flags:
-            if self.flags[player]["start"]["pos"]:
-                screen.blit(
-                    self.flags[player]["start"]["img"],
-                    (
-                        self.flags[player]["start"]["pos"][1] * config.GRID_SIZE
-                        + self.offset[0],
-                        self.flags[player]["start"]["pos"][0] * config.GRID_SIZE
-                        + self.offset[1],
-                    ),
-                )
-            if self.flags[player]["goal"]["pos"]:
-                screen.blit(
-                    self.flags[player]["goal"]["img"],
-                    (
-                        self.flags[player]["goal"]["pos"][1] * config.GRID_SIZE
-                        + self.offset[0],
-                        self.flags[player]["goal"]["pos"][0] * config.GRID_SIZE
-                        + self.offset[1],
-                    ),
-                )
+            for text in ["start", "goal"]:
+                if self.flags[player][text]["pos"]:
+                    screen.blit(
+                        self.flags[player][text]["img"],
+                        (
+                            self.flags[player][text]["pos"][1] * config.GRID_SIZE
+                            + self.offset[0],
+                            self.flags[player][text]["pos"][0] * config.GRID_SIZE
+                            + self.offset[1],
+                        ),
+                    )
+
+    def _draw_text(self, screen, text_value, row, col, offset=(0, 0)):
+        text_value = str(text_value)
+        text_color = BLACK
+        text_surface = self.dynamic_font.render(text_value, True, text_color)
+        text_rect = text_surface.get_rect(
+            center=(
+                col * config.GRID_SIZE + config.GRID_SIZE // 2 + self.offset[0] + offset[0],
+                row * config.GRID_SIZE + config.GRID_SIZE // 2 + self.offset[1] + offset[1],
+            )
+        )
+        screen.blit(text_surface, text_rect)
