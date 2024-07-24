@@ -23,6 +23,7 @@ PLAYER_COLORS = {
 IMAGE_FOLDER = "Assets/Images"
 OBSTACLE_FOLDER = "Assets/Images/Obstacles"
 ROAD_FOLDER = "Assets/Images/Roads"
+FLAG_FOLDER = "Assets/Images/Flags"
 
 # Constants
 MAX_WIDTH = 40
