@@ -3,6 +3,7 @@ import pygame
 from gui.config import GRID_SIZE, PLAYER_IMAGE_SIZE, FRAME_DELAY, IMAGE_FOLDER
 import gui.config as config
 
+
 class Player:
     def __init__(self, offset=(0, 0)):
         self.player_images = {}

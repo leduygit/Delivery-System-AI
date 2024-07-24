@@ -1,16 +1,19 @@
 import json
 
+
 def cast_to_int(value):
     try:
         return int(value)
     except ValueError:
         return 0
 
+
 def parse_positions_file(filename):
-    with open(filename, 'r') as file:
+    with open(filename, "r") as file:
         lines = [line.strip() for line in file if line.strip()]
         positions = [[int(x) for x in line.split()] for line in lines]
     return positions
+
 
 def get_waiting_time(map_data, position):
     waiting_time = map_data[position[0]][position[1]]
@@ -18,12 +21,24 @@ def get_waiting_time(map_data, position):
         return waiting_time[1]
     return waiting_time
 
-def create_json_output(map_data, agent_files, agent_list, initial_fuel=None, initial_time=None):
-    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]  # Adjust the size based on the number of agents
+
+def create_json_output(
+    map_data, agent_files, agent_list, initial_fuel=None, initial_time=None
+):
+    MARKERS = [
+        "S",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+    ]  # Adjust the size based on the number of agents
     moves = []
     max_turns = 0
     agent_data = {}
-
 
     for i, file in enumerate(agent_files):
         agent_id = f"agent_{i+1}"
@@ -84,17 +99,17 @@ def create_json_output(map_data, agent_files, agent_list, initial_fuel=None, ini
                 "goal": data["goal"],
                 "reached": data["reached"],
                 "fuel": fuel,
-                "time": total_time
+                "time": total_time,
             }
 
-        moves.append({
-            f"turn {turn}": turn_data,
-            "map": [row.copy() for row in cumulative_map]
-        })
+        moves.append(
+            {f"turn {turn}": turn_data, "map": [row.copy() for row in cumulative_map]}
+        )
 
     return {"moves": moves}
 
+
 def save_to_json(data, filename):
     """Save the data to a JSON file."""
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         json.dump(data, f, indent=4)

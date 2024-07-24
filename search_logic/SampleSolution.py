@@ -1,5 +1,6 @@
 import search_logic.solution as solution
- 
+
+
 class TestSolution(solution.SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None, gas=None):
         super().__init__(graph, agent_list, map_data, time, gas)
@@ -17,18 +18,15 @@ class TestSolution(solution.SolutionBase):
         # bfs from start to goal
         start, goal = self.agent_list[0]
 
-        
         queue = [(start, [start])]
         visited = set()
 
-        
         while queue:
             current, path = queue.pop(0)
 
             if current == goal:
                 self.move_logs = self.trace_path(path)
-                return '\n'.join([f'{x} {y}' for x, y in path[1:]])
-            
+                return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             visited.add(current)
 
@@ -36,8 +34,9 @@ class TestSolution(solution.SolutionBase):
                 if neighbor not in visited:
                     queue.append((neighbor, path + [neighbor]))
 
-        return 'FAIL'
+        return "FAIL"
 
-#implement your solution here
+
+# implement your solution here
 class LevelSolution:
     pass

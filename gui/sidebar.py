@@ -1,6 +1,7 @@
 import pygame
 from gui.config import GRAY, BLACK, SIDEBAR_WIDTH, WINDOW_SIZE, font, BUTTON_HEIGHT
 
+
 class Sidebar:
     def __init__(self, buttons, player_images, offset=(0, 0)):
         self.buttons = buttons
