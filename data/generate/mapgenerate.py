@@ -28,7 +28,10 @@ class MapGenerator:
     def _addCluster(self):
         clusterLength = random.randint(2, self.clusterSize)
         clusterDirection = random.choice([(0, 1), (1, 0)])  # Horizontal or Vertical
-        startX, startY = random.randint(0, self.row - 1), random.randint(0, self.col - 1)
+        startX, startY = (
+            random.randint(0, self.row - 1),
+            random.randint(0, self.col - 1),
+        )
 
         for i in range(clusterLength):
             x, y = (

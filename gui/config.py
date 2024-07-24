@@ -20,7 +20,9 @@ PLAYER_COLORS = {
 }
 
 # Folders
-IMAGE_FOLDER = 'Assets/Images'
+IMAGE_FOLDER = "Assets/Images"
+OBSTACLE_FOLDER = "Assets/Images/Obstacles"
+ROAD_FOLDER = "Assets/Images/Roads"
 
 # Constants
 MAX_WIDTH = 40
