@@ -26,9 +26,9 @@ class Visualizer:
 
         # Initialize buttons dictionary
         self.buttons = {
-            "previous": pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
-            "next": pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
-            "play_stop": pygame.Rect(0, 0, SIDEBAR_WIDTH - 20, BUTTON_HEIGHT),
+            "previous": pygame.Rect(0, 0, 50, 50),
+            "next": pygame.Rect(0, 0, 50, 50),
+            "play_stop": pygame.Rect(0, 0, 50, 50),
             "playing": False,
         }
 

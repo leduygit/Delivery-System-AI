@@ -1,12 +1,23 @@
 import pygame
-from gui.config import GRAY, BLACK, SIDEBAR_WIDTH, WINDOW_SIZE, font, BUTTON_HEIGHT
-
+import os
+from gui.config import GRAY, BLACK, SIDEBAR_WIDTH, WINDOW_SIZE, font, BUTTON_HEIGHT, CONTROLBUTTON_FOLDER
 
 class Sidebar:
     def __init__(self, buttons, player_images, offset=(0, 0)):
         self.buttons = buttons
         self.player_images = player_images
         self.offset = offset
+        self.load_button_images()
+
+    def load_button_images(self):
+        self.button_images = {
+            'previous': pygame.image.load(os.path.join(CONTROLBUTTON_FOLDER, 'prev.png')),
+            'next': pygame.image.load(os.path.join(CONTROLBUTTON_FOLDER, 'next.png')),
+            'play': pygame.image.load(os.path.join(CONTROLBUTTON_FOLDER, 'play.png')),
+            'pause': pygame.image.load(os.path.join(CONTROLBUTTON_FOLDER, 'pause.png'))
+        }
+        for key in self.button_images:
+            self.button_images[key] = pygame.transform.scale(self.button_images[key], (50, 50))
 
     def draw(self, screen, players, current_turn_index):
         sidebar_bg_color = GRAY
@@ -16,16 +27,10 @@ class Sidebar:
         sidebar_height = WINDOW_SIZE[1]
 
         # Draw sidebar background
-        pygame.draw.rect(
-            screen,
-            sidebar_bg_color,
-            (sidebar_x, sidebar_y, sidebar_width, sidebar_height),
-        )
+        pygame.draw.rect(screen, sidebar_bg_color, (sidebar_x, sidebar_y, sidebar_width, sidebar_height))
 
         # Draw sidebar border
-        pygame.draw.rect(
-            screen, BLACK, (sidebar_x, sidebar_y, sidebar_width, sidebar_height), 2
-        )
+        pygame.draw.rect(screen, BLACK, (sidebar_x, sidebar_y, sidebar_width, sidebar_height), 2)
 
         # Render and draw the current turn text
         state_text = font.render(f"Current turn: {current_turn_index}", True, BLACK)
@@ -39,58 +44,24 @@ class Sidebar:
         for idx, (player_name, player_data) in enumerate(players.items()):
             text_y = idx * sidebar_line_height + sidebar_margin_top
             player_title = font.render(
-                f"{player_name[:-1] + str(int(player_name[-1]) - 1)}:",
-                True,
-                sidebar_text_color,
-            )
-            fuel_text = font.render(
-                f"FUEL: {player_data['fuel']}", True, sidebar_text_color
-            )
-            reach_goal_text = font.render(
-                f"Reached Goal: {'True' if player_data['reached'] else 'False'}",
-                True,
-                sidebar_text_color,
-            )
+                f"{player_name[:-1] + str(int(player_name[-1]) - 1)}:", True, sidebar_text_color)
+            fuel_text = font.render(f"FUEL: {player_data['fuel']}", True, sidebar_text_color)
+            reach_goal_text = font.render(f"Reached Goal: {'True' if player_data['reached'] else 'False'}", True, sidebar_text_color)
 
-            player_image = pygame.transform.scale(
-                self.player_images[player_name]["idle"], (30, 40)
-            )
+            player_image = pygame.transform.scale(self.player_images[player_name]["idle"], (30, 40))
             screen.blit(player_image, (sidebar_margin_left + 100, text_y))
             screen.blit(player_title, (sidebar_margin_left, text_y))
             screen.blit(fuel_text, (sidebar_margin_left, text_y + 20))
             screen.blit(reach_goal_text, (sidebar_margin_left, text_y + 40))
 
-        button_offset_x = sidebar_x
-        button_offset_y = sidebar_y + sidebar_height - 3 * BUTTON_HEIGHT - 40
+        button_offset_x = sidebar_x + 10
+        button_offset_y = sidebar_y + sidebar_height - BUTTON_HEIGHT - 20
 
-        self.buttons["previous"].topleft = (button_offset_x + 10, button_offset_y)
-        self.buttons["next"].topleft = (
-            button_offset_x + 10,
-            button_offset_y + BUTTON_HEIGHT + 10,
-        )
-        self.buttons["play_stop"].topleft = (
-            button_offset_x + 10,
-            button_offset_y + 2 * (BUTTON_HEIGHT + 10),
-        )
+        self.buttons["previous"].topleft = (button_offset_x, button_offset_y)
+        self.buttons["play_stop"].topleft = (button_offset_x + 60, button_offset_y)
+        self.buttons["next"].topleft = (button_offset_x + 120, button_offset_y)
 
-        pygame.draw.rect(screen, pygame.Color("white"), self.buttons["previous"])
-        pygame.draw.rect(screen, pygame.Color("white"), self.buttons["next"])
-        pygame.draw.rect(screen, pygame.Color("white"), self.buttons["play_stop"])
-
-        previous_text = font.render("Previous", True, BLACK)
-        next_text = font.render("Next", True, BLACK)
-        play_stop_text = font.render(
-            "Stop" if self.buttons["playing"] else "Play", True, BLACK
-        )
-
-        screen.blit(
-            previous_text,
-            (self.buttons["previous"].x + 10, self.buttons["previous"].y + 10),
-        )
-        screen.blit(
-            next_text, (self.buttons["next"].x + 10, self.buttons["next"].y + 10)
-        )
-        screen.blit(
-            play_stop_text,
-            (self.buttons["play_stop"].x + 10, self.buttons["play_stop"].y + 10),
-        )
+        screen.blit(self.button_images["previous"], self.buttons["previous"].topleft)
+        play_stop_image = self.button_images["pause"] if self.buttons["playing"] else self.button_images["play"]
+        screen.blit(play_stop_image, self.buttons["play_stop"].topleft)
+        screen.blit(self.button_images["next"], self.buttons["next"].topleft)

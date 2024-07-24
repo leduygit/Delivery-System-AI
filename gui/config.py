@@ -24,6 +24,8 @@ IMAGE_FOLDER = "Assets/Images"
 OBSTACLE_FOLDER = "Assets/Images/Obstacles"
 ROAD_FOLDER = "Assets/Images/Roads"
 FLAG_FOLDER = "Assets/Images/Flags"
+FUEL_FOLDER = "Assets/Images/Fuel"
+CONTROLBUTTON_FOLDER = "Assets/Images/ControlButtons"
 
 # Constants
 MAX_WIDTH = 40
