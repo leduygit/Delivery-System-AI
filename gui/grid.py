@@ -15,11 +15,11 @@ class Grid:
             "Roboto", max(12, config.GRID_SIZE // 2)
         )
         self.flags = self.load_flags(config.FLAG_FOLDER)
-        self.road_image = pygame.image.load(config.ROAD_FOLDER + "/road.png")
+        self.road_image = pygame.image.load(config.ROAD_FOLDER + "/road1.png")
         self.road_image = pygame.transform.scale(
             self.road_image, (config.GRID_SIZE, config.GRID_SIZE)
         )
-        self.fuel_image = pygame.image.load(config.FUEL_FOLDER + "/fuel.png")
+        self.fuel_image = pygame.image.load(config.FUEL_FOLDER + "/fuel1.png")
         MIN = min(
                     config.GRID_SIZE / self.fuel_image.get_height(),
                     config.GRID_SIZE / self.fuel_image.get_width(),
