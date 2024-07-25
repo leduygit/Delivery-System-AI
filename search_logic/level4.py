@@ -1,9 +1,17 @@
 import os
 from random import randint
-from search_logic.bots.random_bot import RandomBot
+from search_logic.bots.bfs_bot import BfsBot as bfs_bot
 from search_logic.main import load_data
 import search_logic.format_output as fo
+import search_logic.graph as graph
 
+def get_value(value):
+    if isinstance(value, tuple):
+        return ('F', value[1])
+    try:
+        return int(value)
+    except:
+        return 0
 
 def is_valid_move(grid, state, move):
     ox, oy = state['x'], state['y']
@@ -12,7 +20,6 @@ def is_valid_move(grid, state, move):
     return 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and \
            grid[nx][ny] != -1 and abs(nx - ox) + abs(ny - oy) == 1 \
            and state['gas'] > 0 and state['time'] > 0
-
 
 def apply_moves(map, state, move, index):
     cur_x, cur_y = state['x'], state['y']
@@ -32,7 +39,7 @@ def apply_moves(map, state, move, index):
     
     state['time'] -= 1
     state['x'], state['y'] = move
-    grid[move[0]][move[1]] = 'S{}'.format(index)
+    grid[move[0]][move[1]] = 'S{}'.format(index + 1)
     return grid, state
 
 
@@ -62,22 +69,22 @@ def get_new_goal(grid, current_position):
 
 def runner():
     grid, start_positions, time, gas = load_data('search_logic/input4.txt')
+    g = graph.GridGraph(grid)
 
-    print(start_positions)
     copy_grid = [list(row) for row in grid]
-    os.makedirs('agents', exist_ok=True)
+    os.makedirs('search_logic/agents', exist_ok=True)
     mmap = {
         'grid': grid,
         'height': len(grid),
         'width': len(grid[0]),
         'gas': gas,
     }
-    # [[(1, 1), (7, 8)], [(2, 5), (9, 0)], [(8, 5), (4, 6)]]
+
     current_positions = [pos[0] for pos in start_positions]
     current_goals = [pos[1] for pos in start_positions]
-    print(current_positions)
-    print(current_goals)
-    bots = [RandomBot() for _ in current_positions]
+
+    # Initialize bots with the starting gas and time for each agent
+    bots = [bfs_bot(grid, time, gas) for _ in current_positions]
     states = []
     for i, bot in enumerate(bots):
         states.append({
@@ -96,7 +103,10 @@ def runner():
         with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'w') as f:
             f.write("")
 
-    while time:
+    agent_current_fuel = [gas for _ in current_positions]
+    agent_current_time = [time for _ in current_positions]
+
+    while time > 0:
         for i, bot in enumerate(bots):
             move = bot.get_move(mmap, states[i])
             print(move)
@@ -112,7 +122,6 @@ def runner():
     output_file = 'Assets/Json/lv4/output.json'
     
     # Create JSON output data
-    data = fo.create_json_output(copy_grid, input_files, start_positions)
-    
+    data = fo.create_json_output(copy_grid, input_files, start_positions, gas, time)
     # Save JSON to file
     fo.save_to_json(data, output_file)
