@@ -21,11 +21,15 @@ class Grid:
         )
         self.fuel_image = pygame.image.load(config.FUEL_FOLDER + "/fuel1.png")
         MIN = min(
-                    config.GRID_SIZE / self.fuel_image.get_height(),
-                    config.GRID_SIZE / self.fuel_image.get_width(),
-                )
+            config.GRID_SIZE / self.fuel_image.get_height(),
+            config.GRID_SIZE / self.fuel_image.get_width(),
+        )
         self.fuel_image = pygame.transform.scale(
-            self.fuel_image, (int(self.fuel_image.get_width() * MIN), int(self.fuel_image.get_height() * MIN))
+            self.fuel_image,
+            (
+                int(self.fuel_image.get_width() * MIN),
+                int(self.fuel_image.get_height() * MIN),
+            ),
         )
 
     def load_flags(self, folder):
@@ -96,11 +100,17 @@ class Grid:
                         screen.blit(
                             self.fuel_image,
                             (
-                                col * config.GRID_SIZE + self.offset[0] + (config.GRID_SIZE - self.fuel_image.get_width()) / 2,
-                                row * config.GRID_SIZE + self.offset[1] + (config.GRID_SIZE - self.fuel_image.get_height()) / 2,
+                                col * config.GRID_SIZE
+                                + self.offset[0]
+                                + (config.GRID_SIZE - self.fuel_image.get_width()) / 2,
+                                row * config.GRID_SIZE
+                                + self.offset[1]
+                                + (config.GRID_SIZE - self.fuel_image.get_height()) / 2,
                             ),
                         )
-                        self._draw_text(screen, self.grid_data[row][col][1], row, col, (-2, +2))
+                        self._draw_text(
+                            screen, self.grid_data[row][col][1], row, col, (-2, +2)
+                        )
                         continue
                 cell_value = str(self.grid_data[row][col])
                 color = WHITE
@@ -174,8 +184,14 @@ class Grid:
         text_surface = self.dynamic_font.render(text_value, True, text_color)
         text_rect = text_surface.get_rect(
             center=(
-                col * config.GRID_SIZE + config.GRID_SIZE // 2 + self.offset[0] + offset[0],
-                row * config.GRID_SIZE + config.GRID_SIZE // 2 + self.offset[1] + offset[1],
+                col * config.GRID_SIZE
+                + config.GRID_SIZE // 2
+                + self.offset[0]
+                + offset[0],
+                row * config.GRID_SIZE
+                + config.GRID_SIZE // 2
+                + self.offset[1]
+                + offset[1],
             )
         )
         screen.blit(text_surface, text_rect)

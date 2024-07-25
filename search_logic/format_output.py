@@ -21,6 +21,7 @@ def get_waiting_time(map_data, position):
         return waiting_time[1]
     return waiting_time
 
+
 def update_goal_positions(goal, agent_id, agent_list, map_data):
     agent_list[agent_id] = (agent_list[agent_id][1], goal)
 
@@ -42,13 +43,29 @@ def update_goal_positions(goal, agent_id, agent_list, map_data):
     # update the new goal position
     goal_x, goal_y = goal
     map_data[goal_x][goal_y] = GOAL_MARKERS[agent_id]
-    
+
     return agent_list, map_data
 
 
-
-def create_json_output(map_data, agent_files, agent_list, initial_fuel=None, initial_time=None, agent_goal_list=None):
-    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]  # Adjust the size based on the number of agents
+def create_json_output(
+    map_data,
+    agent_files,
+    agent_list,
+    initial_fuel=None,
+    initial_time=None,
+    agent_goal_list=None,
+):
+    MARKERS = [
+        "S",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+    ]  # Adjust the size based on the number of agents
     moves = []
     max_turns = 0
     agent_data = {}
@@ -108,7 +125,6 @@ def create_json_output(map_data, agent_files, agent_list, initial_fuel=None, ini
                 data["reached"] = True
 
                 # if the agent marker is not S, update the goal position this agent
-
 
             turn_data[agent_id] = {
                 "position": position,
