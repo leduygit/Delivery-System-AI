@@ -1,4 +1,5 @@
 import os
+from random import randint
 from search_logic.bots.random_bot import RandomBot
 from search_logic.main import load_data
 import search_logic.format_output as fo
@@ -15,10 +16,27 @@ def apply_moves(grid, start_position, move, index):
     return grid
 
 
-def print_current(positions):
+def print_current(positions, goals):
     for i, pos in enumerate(positions):
         with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'a') as f:
             f.write('{} {}\n'.format(pos[0], pos[1]))
+
+    for i, goal in enumerate(goals):
+        with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'a') as f:
+            f.write('{} {}\n'.format(goal[0], goal[1]))
+
+
+def get_new_goal(grid, current_position):
+    places = []
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == '.':
+                places.append((i, j))
+    
+    if not places:
+        return current_position
+    index = randint(0, len(places) - 1)
+    return places[index]
 
 
 def runner():
@@ -42,6 +60,8 @@ def runner():
     for i, bot in enumerate(bots):
         with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'w') as f:
             f.write("")
+        with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'w') as f:
+            f.write("")
 
     while time:
         for i, bot in enumerate(bots):
@@ -54,11 +74,13 @@ def runner():
             if move is None or not is_valid_move(mmap['grid'], 
                                                     current_positions[i][0], current_positions[i][1],
                                                     move[0], move[1]):
-                print_current(current_positions)
+                print_current(current_positions, current_goals)
                 continue
             mmap['grid'] = apply_moves(mmap['grid'], current_positions[i], move, i)
+            if move == current_goals[i]:
+                current_goals[i] = get_new_goal(mmap['grid'], current_positions[i])
             current_positions[i] = move
-            print_current(current_positions)
+            print_current(current_positions, current_goals)
         time -= 1
 
     input_files = [f'search_logic/agents/agent_{i+1}.txt' for i in range(len(bots))]
