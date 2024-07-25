@@ -147,22 +147,33 @@ class MapGenerator:
 
 
 if __name__ == "__main__":
-    n = 10
-    clusterSize = 7  # size of each obstacle cluster
-    numClusters = 50  # number of clusters
-    mapGen = MapGenerator(28, 40, clusterSize, numClusters)
-    mapGrid = mapGen.generateMap()
-    mapGen.addPlayers(5)
+    # lv = [(5,5), (10,10), (15,15), (20,20), (25,25), (28, 40)]
+    lv = {
+        "map1" : (5,5),
+        "map2" : (10,10),
+        "map3" : (15,15),
+        "map4" : (20,20),
+        "map5" : (25,25),
+        "map6" : (28,40)
+    }
+    for item in ["lv1", "lv2", "lv3", "lv4"]:
+        for name, level in lv.items():
+            clusterSize = int(level[0] // 4 + 1)  # size of each obstacle cluster
+            numClusters = int((level[0] + level[1]) * 0.8)  # number of clusters
+            mapGen = MapGenerator(level[0], level[1], clusterSize, numClusters)
+            mapGrid = mapGen.generateMap()
+            mapGen.addPlayers(1)
 
-    # Output with format
-    for row in mapGrid:
-        for cell in row:
-            print(str(cell).rjust(2), end=" ")
-        print()
+            # Output with format
+            for row in mapGrid:
+                for cell in row:
+                    print(str(cell).rjust(2), end=" ")
+                print()
 
-    # Output to file
-    with open("input.txt", "w") as f:
-        for row in mapGrid:
-            for cell in row:
-                f.write(f"{cell} ")
-            f.write("\n")
+            # Output to file
+            with open(f"Asset/Maps/{item}/{name}.txt", "w") as f:
+                f.write(f"{level[0]} {level[1]} 100 100\n")
+                for row in mapGrid:
+                    for cell in row:
+                        f.write(f"{cell} ")
+                    f.write("\n")

@@ -32,9 +32,12 @@ class LevelPage:
 
     def get_files(self):
         folder = f"Assets/JSON/{self.level}/"
-        return [
+        print(f"Getting files from {folder}")
+        files = [
             f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))
         ]
+        files.sort()
+        return files
 
     def draw(self, screen):
         screen.blit(self.background, (0, 0))

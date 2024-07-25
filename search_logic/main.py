@@ -75,14 +75,19 @@ def run_solutions_on_maps():
         ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"]),
         ("Level3", lv3.Level3, ["g", "agent_list", "grid", "time", "gas"]),
     ]
+    levels = ["lv1", "lv2", "lv3"]
 
+    # for level in levels:
     for map_name in MAP_NAME:
-        input_path = f"search_logic/{map_name}.txt"
-        grid, agent_list, time, gas = load_data(input_path)
-        g = graph.GridGraph(grid)
 
         for solution_name, SolutionClass, init_args in solutions:
-            print(f"Running {solution_name} on {map_name}")
+            
+            input_path = f"{MAP_FOLDER}lv{str(solution_name[-1])}/{map_name}.txt"
+            print(input_path)
+            grid, agent_list, time, gas = load_data(input_path)
+            g = graph.GridGraph(grid)
+
+            print(f"Running {solution_name} on {input_path}...")
 
             # Dynamically prepare the arguments
             init_args_values = {
@@ -99,9 +104,7 @@ def run_solutions_on_maps():
             move_log_path = "search_logic/move.txt"
             solution.save_move_logs(move_log_path)
 
-            output_file = os.path.join(
-                "Assets/Json/", solution.get_level(), f"{map_name}.json"
-            )
+            output_file = f"{JSON_FOLDER}lv{str(solution_name[-1])}/{map_name}.json"
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
             # Create JSON output data
