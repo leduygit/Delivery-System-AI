@@ -1,4 +1,5 @@
 import os
+from random import randint
 from search_logic.bots.heuristic_bot import HeuristicBot
 from search_logic.main import load_data
 import search_logic.format_output as fo
@@ -21,10 +22,29 @@ def apply_moves(grid, start_position, move, index):
     grid[move[0]][move[1]] = 'S{}'.format(index + 1)
     return grid
 
-def print_current(positions):
+
+def print_current(positions, goals):
     for i, pos in enumerate(positions):
         with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'a') as f:
             f.write('{} {}\n'.format(pos[0], pos[1]))
+
+    for i, goal in enumerate(goals):
+        with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'a') as f:
+            f.write('{} {}\n'.format(goal[0], goal[1]))
+
+
+def get_new_goal(grid, current_position):
+    places = []
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == '.':
+                places.append((i, j))
+    
+    if not places:
+        return current_position
+    index = randint(0, len(places) - 1)
+    return places[index]
+
 
 def runner():
     grid, start_positions, time, gas = load_data('search_logic/input4.txt')
@@ -47,6 +67,8 @@ def runner():
     for i, bot in enumerate(bots):
         with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'w') as f:
             f.write("")
+        with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'w') as f:
+            f.write("")
 
     agent_current_fuel = [gas for _ in current_positions]
     agent_current_time = [time for _ in current_positions]
@@ -65,8 +87,9 @@ def runner():
             move = bot.get_move(mmap, state, current_positions)
             print(move)
             if move is None or not is_valid_move(mmap['grid'], 
-                                                 current_positions[i][0], current_positions[i][1],
-                                                 move[0], move[1]):
+                                                    current_positions[i][0], current_positions[i][1],
+                                                    move[0], move[1]):
+                print_current(current_positions, current_goals)
                 continue
 
             # Update the grid and agent positions
@@ -91,7 +114,7 @@ def runner():
             bots[i].time = state['time']
             bots[i].gas = state['gas']
 
-            print_current(current_positions)
+            print_current(current_positions, current_goals)
 
         time -= 1
 
