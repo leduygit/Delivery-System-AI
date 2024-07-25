@@ -1,6 +1,6 @@
 import os
 from random import randint
-from search_logic.bots.heuristic_bot import HeuristicBot
+from search_logic.bots.bfs_bot import BfsBot as bfs_bot
 from search_logic.main import load_data
 import search_logic.format_output as fo
 import search_logic.graph as graph
@@ -62,7 +62,7 @@ def runner():
     current_goals = [pos[1] for pos in start_positions]
 
     # Initialize bots with the starting gas and time for each agent
-    bots = [HeuristicBot(grid, time, gas) for _ in current_positions]
+    bots = [bfs_bot(grid, time, gas) for _ in current_positions]
 
     for i, bot in enumerate(bots):
         with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'w') as f:
@@ -85,7 +85,7 @@ def runner():
                 'agent_id': i
             }
             move = bot.get_move(mmap, state, current_positions)
-            print(move)
+            #print(move)
             if move is None or not is_valid_move(mmap['grid'], 
                                                     current_positions[i][0], current_positions[i][1],
                                                     move[0], move[1]):

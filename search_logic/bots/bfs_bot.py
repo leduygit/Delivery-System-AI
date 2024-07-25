@@ -9,7 +9,7 @@ def get_value(value):
     except:
         return 0
 
-class HeuristicBot(BotBase):
+class BfsBot(BotBase):
     def __init__(self, agent_list, map, time=None, gas=None):
         super().__init__()
         self.time = time
@@ -86,7 +86,7 @@ class HeuristicBot(BotBase):
         agent_id = state['agent_id']
         map = map['grid']
 
-        print(current, goal, time, gas)
+        #print(current, goal, time, gas)
 
         next_move = self.bfsToGoal(map, current, goal, time, gas, current_positions)
 
