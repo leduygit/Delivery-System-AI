@@ -13,7 +13,7 @@ class Level3(SolutionBase):
         move_logs = []
         for i in range(len(path)):
             move_logs.append((path[i]))
-        print(move_logs)
+        # print(move_logs)
         return move_logs
 
     def solve(self):
@@ -28,9 +28,9 @@ class Level3(SolutionBase):
 
             # print(current, time, gas)
             if current == goal:
-                print("COST:", cost)
-                print("TIME:", time)
-                print("GAS:", gas)
+                # print('COST:', cost)
+                # print('TIME:', time)
+                # print('GAS:', gas)
                 self.move_logs = self.trace_path(path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
@@ -41,7 +41,8 @@ class Level3(SolutionBase):
             for neighbor, ctime in self.graph.get_neighbors(current):
                 newGas = gas - 1
                 if ctime > 1:
-                    print(neighbor, ctime)
+                    pass
+                    # print(neighbor, ctime)
                 # Check if neighbor is gas station
                 if ctime < 0:
                     ctime = abs(ctime) + 1

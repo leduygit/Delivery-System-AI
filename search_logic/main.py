@@ -128,7 +128,9 @@ def run_solutions_on_maps():
             # Create JSON output data
             # add gas if this level has gas
             if solution_name == "Level3":
-                data = fo.create_json_output(grid, [move_log_path], agent_list, gas)
+                data = fo.create_json_output(grid, [move_log_path], agent_list, gas, time)
+            elif solution_name == "Level2":
+                data = fo.create_json_output(grid, [move_log_path], agent_list, None, time)
             else:
                 data = fo.create_json_output(grid, [move_log_path], agent_list)
 
