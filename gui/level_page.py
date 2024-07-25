@@ -16,6 +16,7 @@ class LevelPage:
 
         # Load background image
         self.background = pygame.image.load("Assets/images/menu/background.png")
+        self.background = pygame.image.load("Assets/images/menu/background.png")
         self.background = pygame.transform.scale(self.background, WINDOW_SIZE)
 
         # Dropdown configuration
@@ -25,7 +26,16 @@ class LevelPage:
         self.dropdown_rect = pygame.Rect(
             WINDOW_SIZE[0] // 2 - 150, WINDOW_SIZE[1] // 3, 300, 50
         )  # Larger dropdown
+        self.font = pygame.freetype.Font(
+            "Assets/Images/Menu/amongus.ttf", 30
+        )  # Load custom font
+        self.dropdown_rect = pygame.Rect(
+            WINDOW_SIZE[0] // 2 - 150, WINDOW_SIZE[1] // 3, 300, 50
+        )  # Larger dropdown
         self.dropdown_height = 0
+        self.max_height = 50 * len(
+            self.files
+        )  # Calculate max height based on number of items
         self.max_height = 50 * len(
             self.files
         )  # Calculate max height based on number of items
@@ -54,7 +64,19 @@ class LevelPage:
                 self.selected_file,
                 (0, 0, 0),
             )
+            self.font.render_to(
+                screen,
+                (self.dropdown_rect.x + 10, self.dropdown_rect.y + 10),
+                self.selected_file,
+                (0, 0, 0),
+            )
         else:
+            self.font.render_to(
+                screen,
+                (self.dropdown_rect.x + 10, self.dropdown_rect.y + 10),
+                "Select a file",
+                (0, 0, 0),
+            )
             self.font.render_to(
                 screen,
                 (self.dropdown_rect.x + 10, self.dropdown_rect.y + 10),
@@ -69,8 +91,21 @@ class LevelPage:
             self.dropdown_rect.x + self.dropdown_rect.width - 30,
             self.dropdown_rect.y + 10,
         )
+        arrow_pos = (
+            self.dropdown_rect.x + self.dropdown_rect.width - 30,
+            self.dropdown_rect.y + 10,
+        )
 
         if self.dropdown_active:
+            pygame.draw.polygon(
+                screen,
+                arrow_color,
+                [
+                    (arrow_pos[0], arrow_pos[1]),
+                    (arrow_pos[0] + arrow_size, arrow_pos[1] + arrow_size),
+                    (arrow_pos[0] - arrow_size, arrow_pos[1] + arrow_size),
+                ],
+            )
             pygame.draw.polygon(
                 screen,
                 arrow_color,
@@ -90,13 +125,28 @@ class LevelPage:
                     (arrow_pos[0] - arrow_size, arrow_pos[1]),
                 ],
             )
+            pygame.draw.polygon(
+                screen,
+                arrow_color,
+                [
+                    (arrow_pos[0], arrow_pos[1] + arrow_size),
+                    (arrow_pos[0] + arrow_size, arrow_pos[1]),
+                    (arrow_pos[0] - arrow_size, arrow_pos[1]),
+                ],
+            )
 
         # Update dropdown height
         if self.dropdown_active:
             self.dropdown_height = min(
                 self.dropdown_height + self.animation_speed * 5, self.max_height
             )
+            self.dropdown_height = min(
+                self.dropdown_height + self.animation_speed * 5, self.max_height
+            )
         else:
+            self.dropdown_height = max(
+                self.dropdown_height - self.animation_speed * 5, 0
+            )
             self.dropdown_height = max(
                 self.dropdown_height - self.animation_speed * 5, 0
             )
@@ -152,6 +202,12 @@ class LevelPage:
                             self.dropdown_rect.width,
                             50,
                         )
+                        rect = pygame.Rect(
+                            self.dropdown_rect.x,
+                            self.dropdown_rect.y + 50 * (i + 1),
+                            self.dropdown_rect.width,
+                            50,
+                        )
                         if rect.collidepoint(mouse_pos):
                             self.selected_file = file
                             self.dropdown_active = False
@@ -162,6 +218,12 @@ class LevelPage:
         mouse_pos = pygame.mouse.get_pos()
         if self.dropdown_active:
             for i in range(len(self.files)):
+                rect = pygame.Rect(
+                    self.dropdown_rect.x,
+                    self.dropdown_rect.y + 50 * (i + 1),
+                    self.dropdown_rect.width,
+                    50,
+                )
                 rect = pygame.Rect(
                     self.dropdown_rect.x,
                     self.dropdown_rect.y + 50 * (i + 1),

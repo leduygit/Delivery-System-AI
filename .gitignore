@@ -6,6 +6,7 @@ __pycache__/
 test*.py
 .DS_Store
 data/generate/input.txt
+search_logic/agents/
 search_logic/agents/*.txt
 
 # C extensions
