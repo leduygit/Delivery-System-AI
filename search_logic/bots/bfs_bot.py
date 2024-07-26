@@ -19,18 +19,22 @@ class BfsBot(BotBase):
         self.map = map
         self.goals = [agent[1] for agent in agent_list]
 
-    def bfsToGoal(self, map, current, goal, time, gas, current_positions):
+    def bfsToGoal(self, map, state):
         # return the next move to reach the goal
 
-        start = current
+        start = (state['x'], state['y'])
+        goal = (state['goal_x'], state['goal_y'])
+        time = state['time']
+        gas = state['gas']
+        grid = map['grid']
 
-        if current == goal:
+        if start == goal:
             return None
 
         queue = pq()
-        queue.put((0, time, current, gas, []))
+        queue.put((0, time, start, gas, []))
         visited = set()
-        visited.add((current, time, gas))
+        visited.add((start, time, gas))
         prev = {}
 
         while not queue.empty():
@@ -47,28 +51,19 @@ class BfsBot(BotBase):
                 next_x = current[0] + direction[0]
                 next_y = current[1] + direction[1]
 
-                if (next_x, next_y) in current_positions and (next_x, next_y) != start:
+                if next_x < 0 or next_x >= len(grid) or next_y < 0 or next_y >= len(grid[0]):
+                    continue    
+
+                if isinstance(grid[next_x][next_y], str) and grid[next_x][next_y][0] == 'S':
+                    # print(grid)
                     continue
 
-                # print(map)
-
-                if (
-                    next_x < 0
-                    or next_x >= len(map)
-                    or next_y < 0
-                    or next_y >= len(map[0])
-                ):
+                if isinstance(grid[next_x][next_y], int) and grid[next_x][next_y] == -1:
                     continue
 
-                if map[next_x][next_y] == -1:
-                    continue
-
-                map_value = get_value(map[next_x][next_y])
-
+                map_value = get_value(grid[next_x][next_y])
                 new_time = time - 1 - get_value(map_value)
                 new_gas = current_gas - 1
-
-                # print(next_x, next_y, new_time, new_gas)
 
                 if new_time < 0 or new_gas < 0:
                     continue
@@ -78,32 +73,11 @@ class BfsBot(BotBase):
 
                 visited.add((next_x, next_y, new_time, new_gas))
                 prev[(next_x, next_y, new_time, new_gas)] = (current, direction)
-
-                queue.put(
-                    (
-                        cost + 1,
-                        new_time,
-                        (next_x, next_y),
-                        new_gas,
-                        path + [(next_x, next_y)],
-                    )
-                )
+                queue.put((cost + 1, new_time, (next_x, next_y), new_gas, path + [(next_x, next_y)]))
 
         return None
-
-    def get_move(self, map, state, current_positions):
+    
+    def get_move(self, map, state):
         # return the next move for the agent
-        current = (state["x"], state["y"])
-        goal = (state["goal_x"], state["goal_y"])
-        time = state["time"]
-        gas = state["gas"]
-        agent_id = state["agent_id"]
-        map = map["grid"]
-
-        # print(current, goal, time, gas)
-
-        next_move = self.bfsToGoal(map, current, goal, time, gas, current_positions)
-
-        # print(current, goal, next_move)
-
+        next_move = self.bfsToGoal(map, state)
         return next_move

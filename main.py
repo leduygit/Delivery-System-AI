@@ -5,7 +5,7 @@ from search_logic import level4 as level4
 
 def main():
     search_logic.run_solutions_on_maps()
-    # level4.runner()
+    level4.runner()
     visualizer.visualize()
 
 
