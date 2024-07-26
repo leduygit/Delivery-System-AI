@@ -52,7 +52,8 @@ class Sidebar:
         )
 
         # Render and draw the current turn text
-        state_text = font.render(f"Current turn: {current_turn_index}", True, BLACK)
+        total_players = len(players.items())
+        state_text = font.render(f"Current time: {int((current_turn_index + total_players - 1) / total_players)}", True, BLACK)
         screen.blit(state_text, (sidebar_x + 10, sidebar_y + 10))
 
         sidebar_text_color = BLACK
