@@ -14,10 +14,10 @@ def get_value(value):
     except:
         return 0
 
-def is_valid_move(grid, state, move):
+def is_valid_move(map, state, move):
     ox, oy = state['x'], state['y']
     nx, ny = move
-    grid = grid['grid']
+    grid = map['grid']
     return 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and \
            grid[nx][ny] != -1 and abs(nx - ox) + abs(ny - oy) == 1 \
            and state['gas'] > 0 and state['time'] > 0
@@ -26,21 +26,29 @@ def apply_moves(map, state, move, index):
     cur_x, cur_y = state['x'], state['y']
     goal = (state['goal_x'], state['goal_y'])
     grid = map['grid']
-    grid[cur_x][cur_y] = '.'
     if move == goal:
+        if index == 0:
+            state['goal_x'], state['goal_y'] = (-1, -1)
+            return grid, state
         state['goal_x'], state['goal_y'] = get_new_goal(grid, (cur_x, cur_y))
-    if isinstance(grid[move[0]][move[1]], tuple) and grid[move[0]][move[1]].startswith('F'):
+    if isinstance(grid[move[0]][move[1]], tuple):
         state['gas'] = map['gas']
         state['wait'] = int(grid[move[0]][move[1]][1])
     else:
         state['gas'] -= 1
 
     if isinstance(grid[move[0]][move[1]], int):
+        if state['wait'] > 0:
+            raise ValueError("Error: Agent is waiting")
         state['wait'] = grid[move[0]][move[1]]
     
     state['time'] -= 1
     state['x'], state['y'] = move
-    grid[move[0]][move[1]] = 'S{}'.format(index + 1)
+    if map['sgrid'][cur_x][cur_y] == 'S{}'.format(index) or map['sgrid'][cur_x][cur_y] == 'S':
+        grid[cur_x][cur_y] = 0
+    else:
+        grid[cur_x][cur_y] = map['sgrid'][cur_x][cur_y]
+    grid[move[0]][move[1]] = 'S{}'.format(index)
     return grid, state
 
 
@@ -59,7 +67,7 @@ def get_new_goal(grid, current_position):
     places = []
     for i in range(len(grid)):
         for j in range(len(grid[0])):
-            if grid[i][j] == ".":
+            if grid[i][j] == 0:
                 places.append((i, j))
 
     if not places:
@@ -75,6 +83,7 @@ def runner():
     copy_grid = [list(row) for row in grid]
     os.makedirs("search_logic/agents", exist_ok=True)
     mmap = {
+        'sgrid': grid,
         'grid': grid,
         'height': len(grid),
         'width': len(grid[0]),
@@ -104,10 +113,9 @@ def runner():
         with open("search_logic/agents/goal_{}.txt".format(i + 1), "w") as f:
             f.write("")
 
-    agent_current_fuel = [gas for _ in current_positions]
-    agent_current_time = [time for _ in current_positions]
-
-    while time > 0:
+    print_current(states)
+    done = False
+    while time > 0 and not done:
         for i, bot in enumerate(bots):
             move = bot.get_move(mmap, states[i])
             print(move)
@@ -116,6 +124,9 @@ def runner():
                 print_current(states)
                 continue
             mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i)
+            if i == 0 and states[i]['goal_x'] == -1:
+                done = True
+                break
             print_current(states)
         time -= 1
 
