@@ -8,6 +8,8 @@ test*.py
 data/generate/input.txt
 search_logic/agents/
 search_logic/agents/*.txt
+output.txt
+reverted.txt
 
 # C extensions
 *.so

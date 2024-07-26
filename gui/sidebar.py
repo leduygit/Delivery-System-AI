@@ -57,7 +57,7 @@ class Sidebar:
         screen.blit(state_text, (sidebar_x + 10, sidebar_y + 10))
 
         sidebar_text_color = BLACK
-        sidebar_line_height = 80
+        sidebar_line_height = 100
         sidebar_margin_top = 40
         sidebar_margin_left = sidebar_x + 10
 
@@ -76,6 +76,9 @@ class Sidebar:
                 True,
                 sidebar_text_color,
             )
+            time_text = font.render(
+                f"Time: {player_data['time']}", True, sidebar_text_color
+            )
 
             player_image = pygame.transform.scale(
                 self.player_images[player_name]["idle"], (30, 40)
@@ -84,6 +87,7 @@ class Sidebar:
             screen.blit(player_title, (sidebar_margin_left, text_y))
             screen.blit(fuel_text, (sidebar_margin_left, text_y + 20))
             screen.blit(reach_goal_text, (sidebar_margin_left, text_y + 40))
+            screen.blit(time_text, (sidebar_margin_left, text_y + 60))
 
         button_offset_x = sidebar_x + 10
         button_offset_y = sidebar_y + sidebar_height - BUTTON_HEIGHT - 20
