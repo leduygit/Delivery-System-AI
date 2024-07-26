@@ -41,8 +41,8 @@ def apply_moves(map, state, move, index):
         if state['wait'] > 0:
             raise ValueError("Error: Agent is waiting")
         state['wait'] = grid[move[0]][move[1]]
-    
-    state['time'] -= 1
+
+    state['time'] -= 1 
     state['x'], state['y'] = move
     if map['sgrid'][cur_x][cur_y] == 'S{}'.format(index) or map['sgrid'][cur_x][cur_y] == 'S':
         grid[cur_x][cur_y] = 0

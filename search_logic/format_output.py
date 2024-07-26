@@ -14,9 +14,12 @@ def parse_positions_file(filename):
 
 def parse_goal_file(filename):
     with open(filename, "r") as file:
-        line = file.readline().strip()
-        goal = tuple(int(x) for x in line.split())
-    return goal
+        # read all lines
+        lines = [line.strip() for line in file if line.strip()]
+        # parse each line into a tuple of integers
+        goals = [(int(x), int(y)) for line in lines for x, y in [line.split()]]
+    return goals
+
 
 def get_waiting_time(map_data, position):
     waiting_time = map_data[position[0]][position[1]]
@@ -60,6 +63,7 @@ def create_json_output(
     moves = []
     max_turns = 0
     agent_data = {}
+    goal_list = [[] for _ in range(len(agent_files))]
 
     for i, agent_file in enumerate(agent_files):
         agent_id = f"agent_{i+1}"
@@ -67,7 +71,8 @@ def create_json_output(
         max_turns = max(max_turns, len(positions))
         if agent_goal_files[i] is not None:
             goal = parse_goal_file(agent_goal_files[i])
-            agent_list, map_data = update_goal_positions(goal, i, agent_list, map_data)
+            #print(agent_goal_files[i])
+            goal_list[i] = goal
         else:
             goal = agent_list[i][1]  # Use the goal from agent_list if goal file is None
         agent_data[agent_id] = {
@@ -78,12 +83,17 @@ def create_json_output(
             "reached": False,
         }
 
+    # print goal list
+
     cumulative_positions = {agent_id: [] for agent_id in agent_data.keys()}
     cumulative_map = [row.copy() for row in map_data]
 
     total_time = initial_time if initial_time is not None else None
     for turn in range(max_turns):
         turn_data = {}
+
+        # update new goal positions
+
 
         for i, (agent_id, data) in enumerate(agent_data.items()):
             if turn < len(data["path"]):
@@ -104,28 +114,31 @@ def create_json_output(
             waiting_time = cast_to_int(waiting_time)
 
             # Simulate time
-            if total_time is not None:
-                total_time -= waiting_time - 1
-            else:
-                total_time = None
+            if (data["time"] is not None and turn > 0):
+                data["time"] -= 1
+            
 
             # Simulate fuel
             initial_fuel = data["fuel"]
             if initial_fuel is not None:
-                fuel = max(0, initial_fuel - turn)
-            else:
-                fuel = None
+                # if move to another cell
+                if turn > 0 and position != data["path"][turn-1]:
+                    data["fuel"] -= 1
 
             # Check if the agent has reached its goal
             if position == data["goal"]:
                 data["reached"] = True
 
+            # print goal[i][turn] if turn < len(goal[i]) else data["goal"]
+            #print(goal_list[i])
+            #print(f"Agent {agent_id} at {position} with goal {goal_list[i][turn] if turn < len(goal_list[i]) else data['goal']}")
+
             turn_data[agent_id] = {
                 "position": position,
-                "goal": data["goal"],
+                "goal": goal_list[i][turn] if turn < len(goal_list[i]) else data["goal"],
+                "fuel": data["fuel"],
+                "time": data["time"],
                 "reached": data["reached"],
-                "fuel": fuel,
-                "time": total_time,
             }
 
         moves.append(

@@ -48,14 +48,8 @@ def load_data(path):
                             start_goal_positions[identifier][0],
                         )
                 elif grid[i][j].startswith("G"):
+                    identifier = int(grid[i][j][1:])
                     start_goal_positions[identifier].append((i, j))
-                    (
-                        start_goal_positions[identifier][0],
-                        start_goal_positions[identifier][1],
-                    ) = (
-                        start_goal_positions[identifier][1],
-                        start_goal_positions[identifier][0],
-                    )
                 elif grid[i][j].startswith("F"):
                     grid[i][j] = ("F", int(grid[i][j][1:]))
                 else:

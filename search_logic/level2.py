@@ -1,21 +1,21 @@
 from search_logic.solution import SolutionBase
 from queue import PriorityQueue as p_queue
-
-
+    
 class Level2(SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None):
         super().__init__(graph, agent_list, map_data, time=time)
 
     def get_level(self):
-        return "lv2"
+        return 'lv2'
 
-    def trace_path(self, path):
+    def trace_path(self, map, path):
         move_logs = []
         for i in range(len(path)):
             move_logs.append((path[i]))
         return move_logs
-
+      
     def get_heuristic(self, node, goal):
+        original_map = self.map_data.copy()
         r = node[0]
         c = node[1]
         if self.map_data[r][c] == -1:
@@ -30,29 +30,31 @@ class Level2(SolutionBase):
         pq = p_queue()
         pq.put((0, self.time, start, [start]))
         marked.add((start, self.time))
+        original = self.map_data
 
         while not pq.empty():
             cost, time, current, path = pq.get()
-
+            
             if time < 0:
                 continue
 
             # print(current, time, gas)
             if current == goal:
-                print("COST:", cost)
-                print("TIME:", time)
-                self.move_logs = self.trace_path(path)
-                return "\n".join([f"{x} {y}" for x, y in path[1:]])
-
+                # print('COST:', cost)
+                # print('TIME:', time)
+                self.move_logs = self.trace_path(original, path)
+                return '\n'.join([f'{x} {y}' for x, y in path[1:]])
+        
             if len(path) > self.graph.rows * self.graph.cols:
                 continue
-
+        
             for neighbor, ctime in self.graph.get_neighbors(current):
-                if self.map_data[neighbor[0]][neighbor[1]] != 0:
-                    ctime += 1
+                if (self.map_data[neighbor[0]][neighbor[1]] != 0):
+                        ctime += 1
                 if (neighbor, time - ctime) in marked:
                     continue
                 marked.add((neighbor, time - ctime))
-                pq.put((cost + 1, time - ctime, neighbor, path + [neighbor]))
+                pq.put((cost + 1, time - ctime, neighbor,
+                        path + [neighbor]))
 
-        return "FAIL"
+        return 'FAIL'
