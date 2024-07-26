@@ -1,35 +1,45 @@
 import pygame
 from gui.config import WINDOW_SIZE
 
+
 class Menu:
     def __init__(self):
         # Define button names
-        self.button_names = ['lv1', 'lv2', 'lv3', 'lv4', 'exit']
-        
+        self.button_names = ["lv1", "lv2", "lv3", "lv4", "exit"]
+
         # Load images
-        self.background = pygame.image.load('Assets/images/menu/background.png')
-        self.button_images = [pygame.image.load(f'Assets/images/menu/{name}.png') for name in self.button_names]
-        self.button_hover_images = [pygame.image.load(f'Assets/images/menu/{name}-2.png') for name in self.button_names]
+        self.background = pygame.image.load("Assets/images/menu/background.png")
+        self.button_images = [
+            pygame.image.load(f"Assets/images/menu/{name}.png")
+            for name in self.button_names
+        ]
+        self.button_hover_images = [
+            pygame.image.load(f"Assets/images/menu/{name}-2.png")
+            for name in self.button_names
+        ]
 
         # Scale the menu background to fit the window size
         self.background = pygame.transform.scale(self.background, WINDOW_SIZE)
 
         # Create button rectangles
         button_y = WINDOW_SIZE[1] // 2 - 100
-        self.button_rects = [img.get_rect(center=(WINDOW_SIZE[0] // 2, button_y + i * 100)) for i, img in enumerate(self.button_images)]
+        self.button_rects = [
+            img.get_rect(center=(WINDOW_SIZE[0] // 2, button_y + i * 100))
+            for i, img in enumerate(self.button_images)
+        ]
 
         self.hovered_button = None  # Track which button is hovered
 
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
-        
+
         # Draw buttons with hover effect
         for i, rect in enumerate(self.button_rects):
             if self.hovered_button == self.button_names[i]:
                 screen.blit(self.button_hover_images[i], rect.topleft)
             else:
                 screen.blit(self.button_images[i], rect.topleft)
-        
+
         pygame.display.flip()
 
     def handle_events(self):

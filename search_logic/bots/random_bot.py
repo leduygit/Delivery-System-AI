@@ -10,4 +10,4 @@ class RandomBot(BotBase):
         dx = randint(-1, 1)
         dy = randint(-1, 1)
 
-        return state['x'] + dx, state['y'] + dy
+        return state["x"] + dx, state["y"] + dy
