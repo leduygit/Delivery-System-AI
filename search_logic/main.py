@@ -52,8 +52,6 @@ def load_data(path):
                     start_goal_positions[identifier].append((i, j))
                 elif grid[i][j].startswith("F"):
                     grid[i][j] = ("F", int(grid[i][j][1:]))
-                elif grid[i][j].startswith("F"):
-                    grid[i][j] = ("F", int(grid[i][j][1:]))
                 else:
                     grid[i][j] = int(grid[i][j])
 
@@ -79,15 +77,14 @@ def run_solutions_on_maps():
     ]
     levels = ["lv1", "lv2", "lv3"]
 
-    # for level in levels:
     for map_name in MAP_NAME:
         for solution_name, SolutionClass, init_args in solutions:
             input_path = f"{MAP_FOLDER}lv{str(solution_name[-1])}/{map_name}.txt"
-            print(input_path)
+            #print(input_path)
             grid, agent_list, time, gas = load_data(input_path)
             g = graph.GridGraph(grid)
 
-            print(f"Running {solution_name} on {input_path}...")
+            #print(f"Running {solution_name} on {input_path}...")
 
             # Dynamically prepare the arguments
             init_args_values = {
@@ -96,31 +93,28 @@ def run_solutions_on_maps():
                 "grid": grid,
                 "time": time,
                 "gas": gas,
-                "gas": gas,
             }
             args = [init_args_values[arg] for arg in init_args]
             solution = SolutionClass(*args)
 
             solution.solve()
             move_log_path = "search_logic/move.txt"
-            move_log_path = "search_logic/move.txt"
             solution.save_move_logs(move_log_path)
 
             output_file = f"{JSON_FOLDER}lv{str(solution_name[-1])}/{map_name}.json"
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-            # Create JSON output data
-            # add gas if this level has gas
+            # Determine goal files or None if not applicable
             if solution_name == "Level3":
-                data = fo.create_json_output(
-                    grid, [move_log_path], agent_list, gas, time
-                )
+                goal_files = [f"{MAP_FOLDER}lv{str(solution_name[-1])}/{map_name}_goal_{i+1}.txt" for i in range(len(agent_list))]
+                goal_files = [goal if os.path.exists(goal) else None for goal in goal_files]
+                data = fo.create_json_output(grid, [move_log_path], goal_files, agent_list, gas, time)
             elif solution_name == "Level2":
-                data = fo.create_json_output(
-                    grid, [move_log_path], agent_list, None, time
-                )
+                goal_files = [f"{MAP_FOLDER}lv{str(solution_name[-1])}/{map_name}_goal_{i+1}.txt" for i in range(len(agent_list))]
+                goal_files = [goal if os.path.exists(goal) else None for goal in goal_files]
+                data = fo.create_json_output(grid, [move_log_path], goal_files, agent_list, None, time)
             else:
-                data = fo.create_json_output(grid, [move_log_path], agent_list)
+                data = fo.create_json_output(grid, [move_log_path], [None] * len(agent_list), agent_list)
 
             # Save JSON to file
             fo.save_to_json(data, output_file)

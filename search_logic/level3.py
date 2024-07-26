@@ -1,6 +1,14 @@
 from search_logic.solution import SolutionBase
 from queue import PriorityQueue
 
+def get_value(value):
+    if isinstance(value, tuple):
+        return value[1]
+    try:
+        return int(value)
+    except:
+        return 0
+
 
 class Level3(SolutionBase):
     def __init__(self, graph, agent_list, map_data, time=None, gas=None):
@@ -9,15 +17,9 @@ class Level3(SolutionBase):
     def get_level(self):
         return "lv3"
 
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        # print(move_logs)
-        return move_logs
-
     def solve(self):
         start, goal = self.agent_list[0]
+        orginal_map = self.map_data.copy()
         marked = set()
         pq = PriorityQueue()
         pq.put((0, self.gas, self.time, start, [start]))
@@ -31,7 +33,7 @@ class Level3(SolutionBase):
                 # print('COST:', cost)
                 # print('TIME:', time)
                 # print('GAS:', gas)
-                self.move_logs = self.trace_path(path)
+                self.move_logs = self.trace_path(orginal_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             if len(path) > self.graph.rows * self.graph.cols:

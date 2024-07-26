@@ -9,14 +9,10 @@ class BFS(sol.SolutionBase):  # Level 1
     def get_level(self):
         return "lv1"
 
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
-
     def solve(self):
         start, goal = self.agent_list[0]
+        # copy the original map
+        original_map = self.map_data.copy()
 
         queue = [(start, [start])]
         visited = set()
@@ -25,7 +21,7 @@ class BFS(sol.SolutionBase):  # Level 1
             current, path = queue.pop(0)
 
             if current == goal:
-                self.move_logs = self.trace_path(path)
+                self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             visited.add(current)
@@ -44,14 +40,10 @@ class DFS(sol.SolutionBase):  # Level 1
     def get_level(self):
         return "lv1"
 
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
-
     def solve(self):
         start, goal = self.agent_list[0]
+        original_map = self.map_data.copy()
+
 
         stack = [(start, [start])]
         visited = set()
@@ -60,7 +52,7 @@ class DFS(sol.SolutionBase):  # Level 1
             current, path = stack.pop()
 
             if current == goal:
-                self.move_logs = self.trace_path(path)
+                self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             visited.add(current)
@@ -79,14 +71,10 @@ class UCS(sol.SolutionBase):  # Level 1
     def get_level(self):
         return "lv1"
 
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
-
     def solve(self):
         start, goal = self.agent_list[0]
+        original_map = self.map_data.copy()
+
 
         queue = p_queue()
         queue.put((0, start, [start]))
@@ -96,7 +84,7 @@ class UCS(sol.SolutionBase):  # Level 1
             cost, current, path = queue.get()
 
             if current == goal:
-                self.move_logs = self.trace_path(path)
+                self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             visited.add(current)
@@ -117,11 +105,6 @@ class GBFS(sol.SolutionBase):  # Level 1
     def get_level(self):
         return "lv1"
 
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
 
     # return the heuristic value of the current node
     def get_heuristic(self, node, goal):
@@ -129,6 +112,8 @@ class GBFS(sol.SolutionBase):  # Level 1
 
     def solve(self):
         start, goal = self.agent_list[0]
+        original_map = self.map_data.copy()
+
 
         queue = p_queue()
         queue.put((0, start, [start]))
@@ -138,7 +123,7 @@ class GBFS(sol.SolutionBase):  # Level 1
             _, current, path = queue.get()
 
             if current == goal:
-                self.move_logs = self.trace_path(path)
+                self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             visited.add(current)
@@ -163,18 +148,14 @@ class Astar(sol.SolutionBase):  # Level 1
     def get_level(self):
         return "lv1"
 
-    def trace_path(self, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
-
     # return the heuristic value of the current node
     def get_heuristic(self, node, goal):
         return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
 
     def solve(self):
         start, goal = self.agent_list[0]
+        original_map = self.map_data.copy()
+
 
         queue = p_queue()
         queue.put((0, start, [start]))
@@ -184,7 +165,7 @@ class Astar(sol.SolutionBase):  # Level 1
             cost, current, path = queue.get()
 
             if current == goal:
-                self.move_logs = self.trace_path(path)
+                self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             visited.add(current)
