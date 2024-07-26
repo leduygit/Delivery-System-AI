@@ -5,9 +5,10 @@ from search_logic.main import load_data
 import search_logic.format_output as fo
 import search_logic.graph as graph
 
+
 def get_value(value):
     if isinstance(value, tuple):
-        return ('F', value[1])
+        return ("F", value[1])
     try:
         return int(value)
     except:
@@ -58,9 +59,9 @@ def get_new_goal(grid, current_position):
     places = []
     for i in range(len(grid)):
         for j in range(len(grid[0])):
-            if grid[i][j] == '.':
+            if grid[i][j] == ".":
                 places.append((i, j))
-    
+
     if not places:
         return current_position
     index = randint(0, len(places) - 1)
@@ -68,11 +69,11 @@ def get_new_goal(grid, current_position):
 
 
 def runner():
-    grid, start_positions, time, gas = load_data('search_logic/input4.txt')
+    grid, start_positions, time, gas = load_data("search_logic/input4.txt")
     g = graph.GridGraph(grid)
 
     copy_grid = [list(row) for row in grid]
-    os.makedirs('search_logic/agents', exist_ok=True)
+    os.makedirs("search_logic/agents", exist_ok=True)
     mmap = {
         'grid': grid,
         'height': len(grid),
@@ -98,9 +99,9 @@ def runner():
         })
 
     for i, bot in enumerate(bots):
-        with open('search_logic/agents/agent_{}.txt'.format(i + 1), 'w') as f:
+        with open("search_logic/agents/agent_{}.txt".format(i + 1), "w") as f:
             f.write("")
-        with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'w') as f:
+        with open("search_logic/agents/goal_{}.txt".format(i + 1), "w") as f:
             f.write("")
 
     agent_current_fuel = [gas for _ in current_positions]
@@ -118,9 +119,9 @@ def runner():
             print_current(states)
         time -= 1
 
-    input_files = [f'search_logic/agents/agent_{i+1}.txt' for i in range(len(bots))]
-    output_file = 'Assets/Json/lv4/output.json'
-    
+    input_files = [f"search_logic/agents/agent_{i+1}.txt" for i in range(len(bots))]
+    output_file = "Assets/Json/lv4/output.json"
+
     # Create JSON output data
     data = fo.create_json_output(copy_grid, input_files, start_positions, gas, time)
     # Save JSON to file

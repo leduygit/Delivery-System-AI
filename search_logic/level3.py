@@ -7,7 +7,7 @@ class Level3(SolutionBase):
         super().__init__(graph, agent_list, map_data, time=time, gas=gas)
 
     def get_level(self):
-        return 'lv3'
+        return "lv3"
 
     def trace_path(self, path):
         move_logs = []
@@ -32,7 +32,7 @@ class Level3(SolutionBase):
                 # print('TIME:', time)
                 # print('GAS:', gas)
                 self.move_logs = self.trace_path(path)
-                return '\n'.join([f'{x} {y}' for x, y in path[1:]])
+                return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             if len(path) > self.graph.rows * self.graph.cols:
                 continue
@@ -54,7 +54,6 @@ class Level3(SolutionBase):
                     continue
 
                 marked.add((neighbor, newGas, time - ctime))
-                pq.put((cost + 1, newGas, time - ctime, neighbor,
-                        path + [neighbor]))
+                pq.put((cost + 1, newGas, time - ctime, neighbor, path + [neighbor]))
 
-        return 'FAIL'
+        return "FAIL"
