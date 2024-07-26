@@ -51,6 +51,32 @@ def update_goal_positions(goal, agent_id, agent_list, map_data):
 
     return agent_list, map_data
 
+def update_map(map_data, agent_id, new_goal, current_position, original_map):
+    # Erase previous path of the agent
+
+    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
+    GOAL_MARKERS = ["G", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"]
+
+    for i, row in enumerate(map_data):
+        for j, cell in enumerate(row):
+            if (cell == MARKERS[agent_id] or  cell == GOAL_MARKERS[agent_id]) and (i, j) != current_position:
+                if original_map[i][j] == MARKERS[agent_id] or original_map[i][j] == GOAL_MARKERS[agent_id]:
+                    map_data[i][j] = 0
+                else:
+                    map_data[i][j] = original_map[i][j]
+
+    # Update the new goal position
+    map_data[current_position[0]][current_position[1]] = MARKERS[agent_id]
+                
+    for i, row in enumerate(map_data):
+        for j, cell in enumerate(row):
+            if (i, j) == new_goal:
+                map_data[i][j] = GOAL_MARKERS[agent_id]
+
+    return map_data
+
+    
+
 def create_json_output(
     map_data,
     agent_files,
@@ -64,6 +90,7 @@ def create_json_output(
     max_turns = 0
     agent_data = {}
     goal_list = [[] for _ in range(len(agent_files))]
+    original_map = [row.copy() for row in map_data]
 
     for i, agent_file in enumerate(agent_files):
         agent_id = f"agent_{i+1}"
@@ -132,6 +159,9 @@ def create_json_output(
             # print goal[i][turn] if turn < len(goal[i]) else data["goal"]
             #print(goal_list[i])
             #print(f"Agent {agent_id} at {position} with goal {goal_list[i][turn] if turn < len(goal_list[i]) else data['goal']}")
+                
+            # if the goal is updated, update the map
+
 
             turn_data[agent_id] = {
                 "position": position,
@@ -140,6 +170,10 @@ def create_json_output(
                 "time": data["time"],
                 "reached": data["reached"],
             }
+
+            if (turn > 1):
+                if (turn < len(goal_list[i]) and goal_list[i][turn] != goal_list[i][turn-1]):
+                    cumulative_map = update_map(cumulative_map, i, goal_list[i][turn], position, original_map)
 
         moves.append(
             {f"turn {turn}": turn_data, "map": [row.copy() for row in cumulative_map]}
