@@ -51,7 +51,6 @@ def apply_moves(map, state, move, index):
     grid[move[0]][move[1]] = 'S{}'.format(index)
     return grid, state
 
-
 def print_current(states):
     for i, _ in enumerate(states):
         pos = (states[i]['x'], states[i]['y'])
@@ -61,7 +60,6 @@ def print_current(states):
         goal = (states[i]['goal_x'], states[i]['goal_y'])
         with open('search_logic/agents/goal_{}.txt'.format(i + 1), 'a') as f:
             f.write('{} {}\n'.format(goal[0], goal[1]))
-
 
 def get_new_goal(grid, current_position):
     places = []
@@ -74,7 +72,6 @@ def get_new_goal(grid, current_position):
         return current_position
     index = randint(0, len(places) - 1)
     return places[index]
-
 
 def runner():
     grid, start_positions, time, gas = load_data("search_logic/input4.txt")
@@ -131,9 +128,9 @@ def runner():
         time -= 1
 
     input_files = [f"search_logic/agents/agent_{i+1}.txt" for i in range(len(bots))]
+    goal_files = [f"search_logic/agents/goal_{i+1}.txt" for i in range(len(bots))]
     output_file = "Assets/Json/lv4/output.json"
 
-    # Create JSON output data
-    data = fo.create_json_output(copy_grid, input_files, start_positions, gas, time)
-    # Save JSON to file
+    data = fo.create_json_output(copy_grid, input_files, goal_files, start_positions, gas, time)
     fo.save_to_json(data, output_file)
+

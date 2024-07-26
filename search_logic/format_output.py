@@ -1,12 +1,10 @@
 import json
 
-
 def cast_to_int(value):
     try:
         return int(value)
     except ValueError:
         return 0
-
 
 def parse_positions_file(filename):
     with open(filename, "r") as file:
@@ -14,6 +12,11 @@ def parse_positions_file(filename):
         positions = [[int(x) for x in line.split()] for line in lines]
     return positions
 
+def parse_goal_file(filename):
+    with open(filename, "r") as file:
+        line = file.readline().strip()
+        goal = tuple(int(x) for x in line.split())
+    return goal
 
 def get_waiting_time(map_data, position):
     waiting_time = map_data[position[0]][position[1]]
@@ -21,11 +24,10 @@ def get_waiting_time(map_data, position):
         return waiting_time[1]
     return waiting_time
 
-
 def update_goal_positions(goal, agent_id, agent_list, map_data):
     agent_list[agent_id] = (agent_list[agent_id][1], goal)
 
-    # erase previous path of the agent
+    # Erase previous path of the agent
     MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
 
     for i, row in enumerate(map_data):
@@ -40,46 +42,40 @@ def update_goal_positions(goal, agent_id, agent_list, map_data):
             if cell == GOAL_MARKERS[agent_id]:
                 map_data[i][j] = 0
 
-    # update the new goal position
+    # Update the new goal position
     goal_x, goal_y = goal
     map_data[goal_x][goal_y] = GOAL_MARKERS[agent_id]
 
     return agent_list, map_data
 
-
 def create_json_output(
     map_data,
     agent_files,
+    agent_goal_files,
     agent_list,
     initial_fuel=None,
-    initial_time=None,
-    agent_goal_list=None,
+    initial_time=None
 ):
-    MARKERS = [
-        "S",
-        "S1",
-        "S2",
-        "S3",
-        "S4",
-        "S5",
-        "S6",
-        "S7",
-        "S8",
-    ]  # Adjust the size based on the number of agents
+    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
     moves = []
     max_turns = 0
     agent_data = {}
 
-    for i, file in enumerate(agent_files):
+    for i, agent_file in enumerate(agent_files):
         agent_id = f"agent_{i+1}"
-        positions = parse_positions_file(file)
+        positions = parse_positions_file(agent_file)
         max_turns = max(max_turns, len(positions))
+        if agent_goal_files[i] is not None:
+            goal = parse_goal_file(agent_goal_files[i])
+            agent_list, map_data = update_goal_positions(goal, i, agent_list, map_data)
+        else:
+            goal = agent_list[i][1]  # Use the goal from agent_list if goal file is None
         agent_data[agent_id] = {
-            "goal": agent_list[i][1],
+            "goal": goal,
             "path": positions,
             "fuel": initial_fuel,
             "time": initial_time,
-            "reached": False,  # Track whether the agent has reached its goal
+            "reached": False,
         }
 
     cumulative_positions = {agent_id: [] for agent_id in agent_data.keys()}
@@ -97,7 +93,7 @@ def create_json_output(
 
             # Update cumulative positions
             cumulative_positions[agent_id].append(position)
-            marker = MARKERS[i]  # Use marker from the constant array
+            marker = MARKERS[i]
 
             # Update the cumulative map with the agent's marker
             x, y = position
@@ -124,8 +120,6 @@ def create_json_output(
             if position == data["goal"]:
                 data["reached"] = True
 
-                # if the agent marker is not S, update the goal position this agent
-
             turn_data[agent_id] = {
                 "position": position,
                 "goal": data["goal"],
@@ -139,7 +133,6 @@ def create_json_output(
         )
 
     return {"moves": moves}
-
 
 def save_to_json(data, filename):
     """Save the data to a JSON file."""
