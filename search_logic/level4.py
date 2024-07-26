@@ -28,7 +28,7 @@ def apply_moves(map, state, move, index):
     grid = map['grid']
     if move == goal:
         if index == 0:
-            state['goal_x'], state['goal_y'] = (-1, -1)
+            state['x'], state['y'] = move
             return grid, state
         state['goal_x'], state['goal_y'] = get_new_goal(grid, (cur_x, cur_y))
     if isinstance(grid[move[0]][move[1]], tuple):
@@ -117,17 +117,20 @@ def runner():
     done = False
     while time > 0 and not done:
         for i, bot in enumerate(bots):
+            if states[i]['wait'] > 0:
+                states[i]['wait'] -= 1
+                print_current(states)
+                continue
             move = bot.get_move(mmap, states[i])
             print(move)
-            if move is None or not is_valid_move(mmap, states[i], move) or states[i]['wait'] > 0:
-                states[i]['wait'] -= states[i]['wait'] > 0
+            if move is None or not is_valid_move(mmap, states[i], move):
                 print_current(states)
                 continue
             mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i)
-            if i == 0 and states[i]['goal_x'] == -1:
+            print_current(states)
+            if i == 0 and states[i]['x'] == states[i]['goal_x'] and states[i]['y'] == states[i]['goal_y']:
                 done = True
                 break
-            print_current(states)
         time -= 1
 
     input_files = [f"search_logic/agents/agent_{i+1}.txt" for i in range(len(bots))]
