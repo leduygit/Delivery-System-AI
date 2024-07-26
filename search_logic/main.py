@@ -98,7 +98,7 @@ def run_solutions_on_maps():
             solution = SolutionClass(*args)
 
             solution.solve()
-            move_log_path = f"{MAP_FOLDER}lv{str(solution_name[-1])}/{map_name}_move.txt"
+            move_log_path = "search_logic/move.txt"
             solution.save_move_logs(move_log_path)
 
             output_file = f"{JSON_FOLDER}lv{str(solution_name[-1])}/{map_name}.json"
