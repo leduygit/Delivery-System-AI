@@ -88,10 +88,6 @@ class BfsBot(BotBase):
                 prev[(next_x, next_y, new_time, new_gas)] = (current, direction)
                 queue.put((cost + 1, new_time, (next_x, next_y), new_gas, path + [(next_x, next_y)]))
 
-        # check if the bot is blocking the path of other bots
-        # if so, move to a different cell
-                
-        
 
         return None
     
