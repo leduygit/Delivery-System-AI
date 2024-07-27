@@ -45,22 +45,10 @@ class Grid:
                 img = pygame.transform.scale(
                     img, (int(img.get_width() / MAX), int(img.get_height() / MAX))
                 )
-                for text in ["start", "goal"]:
-                    if text in filename:
-                        if filename[-5] not in flags:
-                            flags[filename[-5]] = {"start": None, "goal": None}
-                        flags[filename[-5]][text] = {"img": img, "pos": None}
-        for row in range(len(self.grid_data)):
-            for col in range(len(self.grid_data[row])):
-                cell_value = str(self.grid_data[row][col])
-                if cell_value[0] == "S":
-                    if len(cell_value) == 1:
-                        cell_value += "0"
-                    flags[cell_value[1]]["start"]["pos"] = (row, col)
-                elif cell_value[0] == "G":
-                    if len(cell_value) == 1:
-                        cell_value += "0"
-                    flags[cell_value[1]]["goal"]["pos"] = (row, col)
+                if "start" in filename:
+                    flags[f"S{int(filename[-5]) + 1}"] = img
+                elif "goal" in filename:
+                    flags[f"G{int(filename[-5]) + 1}"] = img
         return flags
 
     def update_grid(self, grid_data):
@@ -95,36 +83,25 @@ class Grid:
                         row * config.GRID_SIZE + self.offset[1],
                     ),
                 )
-                if isinstance(self.grid_data[row][col], list):
-                    if self.grid_data[row][col][0] == "F":
-                        screen.blit(
-                            self.fuel_image,
-                            (
-                                col * config.GRID_SIZE
-                                + self.offset[0]
-                                + (config.GRID_SIZE - self.fuel_image.get_width()) / 2,
-                                row * config.GRID_SIZE
-                                + self.offset[1]
-                                + (config.GRID_SIZE - self.fuel_image.get_height()) / 2,
-                            ),
-                        )
-                        self._draw_text(
-                            screen, self.grid_data[row][col][1], row, col, (-2, +2)
-                        )
-                        continue
                 cell_value = str(self.grid_data[row][col])
-                color = WHITE
+                if "_" in str(cell_value):
+                    owner = cell_value.split("_")[0]
+                    text_value = (cell_value.split("_")[1])
+                else:
+                    owner = cell_value
+                    text_value = cell_value
+
                 border_color = LITE_BLACK
-
-                text_value = cell_value
-                if cell_value[0] == "S" or cell_value[0] == "G":
-                    if len(cell_value) == 1:
-                        cell_value += "1"
+                
+                # shift player index by 1
+                if (owner[0]).upper() == "S" or owner[0] == "G":
+                    if len(owner) == 1:
+                        owner = f"{owner}1"
                     else:
-                        cell_value = f"{cell_value[0]}{int(cell_value[1]) + 1}"
+                        owner = f"{owner[0]}{int(owner[1]) + 1}"
 
-                if cell_value[0] == "S" or cell_value[0] == "G":
-                    color = PLAYER_COLORS[cell_value[1]]  # Start positions
+                if (owner[0]).upper() == "S" or owner[0] == "G":
+                    color = PLAYER_COLORS[owner[1]]  # Start positions
                     pygame.draw.rect(
                         screen,
                         color,
@@ -135,6 +112,24 @@ class Grid:
                             config.GRID_SIZE,
                         ),
                     )
+                if "F" in cell_value:
+                    screen.blit(
+                        self.fuel_image,
+                        (
+                            col * config.GRID_SIZE
+                            + self.offset[0]
+                            + (config.GRID_SIZE - self.fuel_image.get_width()) / 2,
+                            row * config.GRID_SIZE
+                            + self.offset[1]
+                            + (config.GRID_SIZE - self.fuel_image.get_height()) / 2,
+                        ),
+                    )
+                    text_value = int(text_value.split(', ')[1].strip(']').strip(')'))
+                    self._draw_text(
+                        screen, text_value, row, col, (-2, +2)
+                    )
+                    continue
+
                 # draw obstacles
                 elif cell_value == "-1":
                     obstacle_image = self.assigned_obstacle_images.get((row, col), None)
@@ -158,23 +153,21 @@ class Grid:
                     ),
                     1,
                 )
-                # check if text_value is integer
-                if text_value.isdigit() and text_value not in ["-1", "0"]:
+                # text 
+                if (text_value.isdigit() and text_value not in ["-1", "0"]):
                     self._draw_text(screen, text_value, row, col)
 
-        self._draw_flags(screen)
-
-    def _draw_flags(self, screen):
-        for player in self.flags:
-            for text in ["start", "goal"]:
-                if self.flags[player][text]["pos"]:
+                #draw flags
+                if text_value[0] == "S" or text_value[0] == "G":
+                    if len(text_value) == 1:
+                        text_value = f"{text_value}1"
+                    else:
+                        text_value = f"{text_value[0]}{int(text_value[1]) + 1}"
                     screen.blit(
-                        self.flags[player][text]["img"],
+                        self.flags[text_value],
                         (
-                            self.flags[player][text]["pos"][1] * config.GRID_SIZE
-                            + self.offset[0],
-                            self.flags[player][text]["pos"][0] * config.GRID_SIZE
-                            + self.offset[1],
+                            col * config.GRID_SIZE + self.offset[0],
+                            row * config.GRID_SIZE + self.offset[1],
                         ),
                     )
 
