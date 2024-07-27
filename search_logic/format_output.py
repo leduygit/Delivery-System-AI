@@ -54,19 +54,20 @@ def update_goal_positions(goal, agent_id, agent_list, map_data):
 def update_map(map_data, agent_id, new_goal, current_position, original_map):
     # Erase previous path of the agent
 
-    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
+    START_MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
     GOAL_MARKERS = ["G", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"]
+    PATH_MARKERS = ["s", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"]
 
     for i, row in enumerate(map_data):
         for j, cell in enumerate(row):
-            if (cell == MARKERS[agent_id] or  cell == GOAL_MARKERS[agent_id]) and (i, j) != current_position:
-                if original_map[i][j] == MARKERS[agent_id] or original_map[i][j] == GOAL_MARKERS[agent_id]:
-                    map_data[i][j] = 0
-                else:
-                    map_data[i][j] = original_map[i][j]
+            if cell == PATH_MARKERS[agent_id]:
+                map_data[i][j] = original_map[i][j]
+            if cell == START_MARKERS[agent_id] or cell == GOAL_MARKERS[agent_id]:
+                map_data[i][j] = 0
+
 
     # Update the new goal position
-    map_data[current_position[0]][current_position[1]] = MARKERS[agent_id]
+    map_data[current_position[0]][current_position[1]] = START_MARKERS[agent_id]
                 
     for i, row in enumerate(map_data):
         for j, cell in enumerate(row):
@@ -85,7 +86,9 @@ def create_json_output(
     initial_fuel=None,
     initial_time=None
 ):
-    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
+    MARKERS = ["s", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"]
+    START_MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
+    GOAL_MARKERS = ["G", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"]
     moves = []
     max_turns = 0
     agent_data = {}
@@ -134,7 +137,10 @@ def create_json_output(
 
             # Update the cumulative map with the agent's marker
             x, y = position
-            cumulative_map[x][y] = marker
+            if (turn > 0):
+                # if the cell it's not goal or start
+                if (cumulative_map[x][y] != GOAL_MARKERS[i] and cumulative_map[x][y] != START_MARKERS[i]):
+                    cumulative_map[x][y] = marker
 
             # Calculate waiting time and total time
             waiting_time = get_waiting_time(map_data, position)
@@ -143,14 +149,18 @@ def create_json_output(
             # Simulate time
             if (data["time"] is not None and turn > 0):
                 data["time"] -= 1
+
             
 
             # Simulate fuel
-            initial_fuel = data["fuel"]
             if initial_fuel is not None:
                 # if move to another cell
                 if turn > 0 and position != data["path"][turn-1]:
                     data["fuel"] -= 1
+
+            # if the current cell is a gas station
+            if type(original_map[x][y]) != int and original_map[x][y][0] == "F":
+                data["fuel"] = initial_fuel
 
             # Check if the agent has reached its goal
             if position == data["goal"]:
