@@ -31,7 +31,10 @@ def update_map(map_data, agent_id, new_goal, current_position, original_map):
     for i, row in enumerate(map_data):
         for j, cell in enumerate(row):
             if cell == MARKERS[agent_id]:
-                map_data[i][j] = original_map[i][j]
+                if original_map[i][j] in (START_MARKERS[agent_id], GOAL_MARKERS[agent_id]):
+                    map_data[i][j] = 0
+                else:
+                    map_data[i][j] = original_map[i][j]
             if cell in (START_MARKERS[agent_id], GOAL_MARKERS[agent_id]):
                 map_data[i][j] = 0
 

@@ -22,7 +22,7 @@ def is_valid_move(map, state, move):
            grid[nx][ny] != -1 and abs(nx - ox) + abs(ny - oy) == 1 \
            and state['gas'] > 0 and state['time'] > 0
 
-def apply_moves(map, state, move, index):
+def apply_moves(map, state, move, index, original_state):
     cur_x, cur_y = state['x'], state['y']
     goal = (state['goal_x'], state['goal_y'])
     grid = map['grid']
@@ -31,16 +31,21 @@ def apply_moves(map, state, move, index):
             state['x'], state['y'] = move
             return grid, state
         state['goal_x'], state['goal_y'] = get_new_goal(grid, (cur_x, cur_y))
-    if isinstance(grid[move[0]][move[1]], tuple):
-        state['gas'] = map['gas']
-        state['wait'] = int(grid[move[0]][move[1]][1])
-    else:
-        state['gas'] -= 1
 
-    if isinstance(grid[move[0]][move[1]], int):
+    x, y = move
+    if isinstance(original_state["map"][x][y], tuple):
+        #print("REFUELING", x, y)
+        state['gas'] = original_state["gas"]
+        state['wait'] = original_state["map"][x][y][1]
+    else:
+        # if move to another cell then reduce gas
+        if move != (cur_x, cur_y):
+            state['gas'] -= 1
+
+    if isinstance(original_state["map"][x][y], int):
         if state['wait'] > 0:
             raise ValueError("Error: Agent is waiting")
-        state['wait'] = grid[move[0]][move[1]]
+        state['wait'] = original_state["map"][x][y]
 
     state['time'] -= 1 
     state['x'], state['y'] = move
@@ -49,6 +54,7 @@ def apply_moves(map, state, move, index):
     else:
         grid[cur_x][cur_y] = map['sgrid'][cur_x][cur_y]
     grid[move[0]][move[1]] = 'S{}'.format(index)
+    print(state)
     return grid, state
 
 def print_current(states):
@@ -91,8 +97,11 @@ def runner(filename):
     current_positions = [pos[0] for pos in start_positions]
     current_goals = [pos[1] for pos in start_positions]
 
+
+
+
     # Initialize bots with the starting gas and time for each agent
-    bots = [bfs_bot(grid, time, gas) for _ in current_positions]
+    bots = [bfs_bot(start_positions, copy_grid, time, gas) for _ in current_positions]
     states = []
     for i, bot in enumerate(bots):
         states.append({
@@ -104,6 +113,12 @@ def runner(filename):
             'time': time,
             'wait': 0,
         })
+
+    original_state = {
+        'map': copy_grid,
+        'gas': gas,
+    }
+    
 
     for i, bot in enumerate(bots):
         with open("search_logic/agents/agent_{}.txt".format(i + 1), "w") as f:
@@ -117,14 +132,16 @@ def runner(filename):
         for i, bot in enumerate(bots):
             if states[i]['wait'] > 0:
                 states[i]['wait'] -= 1
+                states[i]['time'] -= 1
                 print_current(states)
                 continue
             move = bot.get_move(mmap, states[i])
-            print(move)
-            if move is None or not is_valid_move(mmap, states[i], move):
+            #print(move)
+            if move is None:
+                states[i]['time'] -= 1
                 print_current(states)
                 continue
-            mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i)
+            mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i, original_state)
             print_current(states)
             if i == 0 and states[i]['x'] == states[i]['goal_x'] and states[i]['y'] == states[i]['goal_y']:
                 done = True
