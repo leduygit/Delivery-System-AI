@@ -23,6 +23,9 @@ class BFS(sol.SolutionBase):  # Level 1
             if current == goal:
                 self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
+            
+            if current in visited:
+                continue
 
             visited.add(current)
 
@@ -86,13 +89,14 @@ class UCS(sol.SolutionBase):  # Level 1
             if current == goal:
                 self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
+            
+            if current in visited:
+                continue
 
             visited.add(current)
 
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
-                    if self.map_data[neighbor[0]][neighbor[1]] != 0:
-                        weight += 1
                     queue.put((cost + weight, neighbor, path + [neighbor]))
 
         return "FAIL"
@@ -126,6 +130,9 @@ class GBFS(sol.SolutionBase):  # Level 1
                 self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
+            if current in visited:
+                continue
+            
             visited.add(current)
 
             for neighbor, _ in self.graph.get_neighbors(current):
@@ -167,6 +174,9 @@ class Astar(sol.SolutionBase):  # Level 1
             if current == goal:
                 self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
+            
+            if current in visited:
+                continue
 
             visited.add(current)
 
@@ -174,8 +184,6 @@ class Astar(sol.SolutionBase):  # Level 1
 
             for neighbor, weight in self.graph.get_neighbors(current):
                 if neighbor not in visited:
-                    if self.map_data[neighbor[0]][neighbor[1]] != 0:
-                        weight += 1
                     queue.put(
                         (
                             cost + weight + self.get_heuristic(neighbor, goal),
