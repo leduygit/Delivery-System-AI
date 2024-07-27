@@ -1,8 +1,8 @@
 import json
 
-MARKERS = ["s", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"]
-START_MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
-GOAL_MARKERS = ["G", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"]
+MARKERS = ["s", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"]
+START_MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10"]
+GOAL_MARKERS = ["G", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G10"]
 
 
 def cast_to_int(value):
