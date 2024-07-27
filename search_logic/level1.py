@@ -130,10 +130,10 @@ class GBFS(sol.SolutionBase):  # Level 1
                 self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
-            visited.add(current)
-            
             if current in visited:
                 continue
+            
+            visited.add(current)
 
             for neighbor, _ in self.graph.get_neighbors(current):
                 if neighbor not in visited:
