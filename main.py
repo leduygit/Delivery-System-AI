@@ -5,7 +5,8 @@ from search_logic import level4 as level4
 
 def main():
     search_logic.run_solutions_on_maps()
-    level4.runner()
+    for i in range(1, 3):
+        level4.runner(f"Assets/Maps/lv4/map{i}.txt")
     visualizer.visualize()
 
 

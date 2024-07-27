@@ -57,7 +57,7 @@ class Sidebar:
         screen.blit(state_text, (sidebar_x + 10, sidebar_y + 10))
 
         sidebar_text_color = BLACK
-        sidebar_line_height = 80
+        sidebar_line_height = 70
         sidebar_margin_top = 40
         sidebar_margin_left = sidebar_x + 10
 
@@ -71,10 +71,8 @@ class Sidebar:
             fuel_text = font.render(
                 f"FUEL: {player_data['fuel']}", True, sidebar_text_color
             )
-            reach_goal_text = font.render(
-                f"Reached Goal: {'True' if player_data['reached'] else 'False'}",
-                True,
-                sidebar_text_color,
+            time_text = font.render(
+                f"TIME: {player_data['time']}", True, sidebar_text_color
             )
 
             player_image = pygame.transform.scale(
@@ -83,7 +81,7 @@ class Sidebar:
             screen.blit(player_image, (sidebar_margin_left + 100, text_y))
             screen.blit(player_title, (sidebar_margin_left, text_y))
             screen.blit(fuel_text, (sidebar_margin_left, text_y + 20))
-            screen.blit(reach_goal_text, (sidebar_margin_left, text_y + 40))
+            screen.blit(time_text, (sidebar_margin_left, text_y + 40))
 
         button_offset_x = sidebar_x + 10
         button_offset_y = sidebar_y + sidebar_height - BUTTON_HEIGHT - 20
