@@ -71,7 +71,7 @@ def load_data(path):
 
 def run_solutions_on_maps():
     solutions = [
-        ("Level1", lv1.GBFS, ["g", "agent_list", "grid"]),
+        ("Level1", lv1.BFS, ["g", "agent_list", "grid"]),
         ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"]),
         ("Level3", lv3.Level3, ["g", "agent_list", "grid", "time", "gas"]),
     ]
