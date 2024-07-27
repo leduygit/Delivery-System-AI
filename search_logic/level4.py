@@ -75,6 +75,7 @@ def get_new_goal(grid, current_position):
 
 def runner(filename):
     grid, start_positions, time, gas = load_data(filename)
+    print(f"file {filename} time {time} gas {gas}")
     g = graph.GridGraph(grid)
 
     copy_grid = [list(row) for row in grid]
