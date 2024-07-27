@@ -75,6 +75,7 @@ def get_new_goal(grid, current_position):
 
 def runner(filename):
     grid, start_positions, time, gas = load_data(filename)
+    initial_time = time
     g = graph.GridGraph(grid)
 
     copy_grid = [list(row) for row in grid]
@@ -134,6 +135,6 @@ def runner(filename):
     goal_files = [f"search_logic/agents/goal_{i+1}.txt" for i in range(len(bots))]
     output_file = filename.replace("Maps", "Json").replace(".txt", ".json") 
 
-    data = fo.create_json_output(copy_grid, input_files, goal_files, start_positions, gas, time)
+    data = fo.create_json_output(copy_grid, input_files, goal_files, start_positions, gas, initial_time)
     fo.save_to_json(data, output_file)
 
