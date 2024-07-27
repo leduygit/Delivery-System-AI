@@ -88,6 +88,7 @@ class BfsBot(BotBase):
                 prev[(next_x, next_y, new_time, new_gas)] = (current, direction)
                 queue.put((cost + 1, new_time, (next_x, next_y), new_gas, path + [(next_x, next_y)]))
 
+
         return None
     
     def get_move(self, map, state):
