@@ -22,11 +22,12 @@ class MapGenerator:
                 self._addCluster()
             if self.isConnected():
                 break
+            # reset map
             self.mapGrid = np.zeros((self.row, self.col), dtype=object)
         return self.mapGrid
 
     def _addCluster(self):
-        clusterLength = random.randint(2, self.clusterSize)
+        clusterLength = random.randint(1, self.clusterSize * 2)
         clusterDirection = random.choice([(0, 1), (1, 0)])  # Horizontal or Vertical
         startX, startY = (
             random.randint(0, self.row - 1),
@@ -145,25 +146,55 @@ class MapGenerator:
             suffix = "" if i == 0 else str(i)
             self.addStartGoal(S=f"S{suffix}", G=f"G{suffix}")
 
+    def addDelay(self, numberDelay=1):
+        for i in range(numberDelay):
+            x, y = random.randint(0, self.row - 1), random.randint(0, self.col - 1)
+            if str(self.mapGrid[x, y]) == "0":
+                self.mapGrid[x, y] = random.randint(1, 10)
+
+    def addFuel(self, numberFuel=1):
+        for i in range(numberFuel):
+            x, y = random.randint(0, self.row - 1), random.randint(0, self.col - 1)
+            if str(self.mapGrid[x, y]) == "0":
+                self.mapGrid[x, y] = f"F{random.randint(1, 5)}"
 
 if __name__ == "__main__":
     # lv = [(5,5), (10,10), (15,15), (20,20), (25,25), (28, 40)]
     lv = {
-        "map1": (5, 5),
-        "map2": (10, 10),
-        "map3": (15, 15),
-        "map4": (20, 20),
-        "map5": (25, 25),
-        "map6": (28, 40),
+        "map1": (5, 5), # 2
+        "map2": (10, 10), # 3
+        "map3": (15, 15), # 5
+        "map4": (20, 20), # 6
+        "map5": (25, 25), # 8
+        # "map6": (28, 40), # 9
     }
-    for item in ["lv1", "lv2", "lv3", "lv4"]:
+    for item in ["lv3"]:
         for name, level in lv.items():
-            clusterSize = int(level[0] // 4 + 1)  # size of each obstacle cluster
-            numClusters = int((level[0] + level[1]) * 0.8)  # number of clusters
+            clusterSize = int(name[-1])  # size of each obstacle cluster
+            numClusters = int((level[0] + level[1] // 2) * 1.25)  # number of clusters
             mapGen = MapGenerator(level[0], level[1], clusterSize, numClusters)
             mapGrid = mapGen.generateMap()
-            mapGen.addPlayers(1)
+            if item != "lv4":
+                mapGen.addPlayers(1)
+            else:
+                if name == "map1":
+                    mapGen.addPlayers(2)
+                elif name == "map2":
+                    mapGen.addPlayers(3)
+                elif name == "map3":
+                    mapGen.addPlayers(5)
+                elif name == "map4":
+                    mapGen.addPlayers(6)
+                elif name == "map5":
+                    mapGen.addPlayers(8)
+                elif name == "map6":
+                    mapGen.addPlayers(9)
 
+            if item in ["lv4", "lv3"]:
+                mapGen.addFuel(int(int(level[0]) // 3))
+
+            mapGen.addDelay(int(int(level[0])))
+            
             # Output with format
             for row in mapGrid:
                 for cell in row:
@@ -171,7 +202,7 @@ if __name__ == "__main__":
                 print()
 
             # Output to file
-            with open(f"Asset/Maps/{item}/{name}.txt", "w") as f:
+            with open(f"Assets/Maps/{item}/{name}.txt", "w") as f:
                 f.write(f"{level[0]} {level[1]} 100 100\n")
                 for row in mapGrid:
                     for cell in row:
