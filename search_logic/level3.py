@@ -28,7 +28,8 @@ class Level3(SolutionBase):
         while not pq.empty():
             cost, gas, time, current, path = pq.get()
 
-            # print(current, time, gas)
+            if time < 0:
+                continue
             if current == goal:
                 # print('COST:', cost)
                 # print('TIME:', time)
@@ -37,8 +38,6 @@ class Level3(SolutionBase):
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
 
             if len(path) > self.graph.rows * self.graph.cols:
-                continue
-            if time < 0:
                 continue
             for neighbor, ctime in self.graph.get_neighbors(current):
                 newGas = gas - 1
@@ -51,6 +50,8 @@ class Level3(SolutionBase):
                     newGas = self.gas
 
                 if newGas < 0:
+                    continue
+                if (time < 0):
                     continue
                 if (neighbor, newGas, time - ctime) in marked:
                     continue

@@ -27,30 +27,6 @@ def get_waiting_time(map_data, position):
         return waiting_time[1]
     return waiting_time
 
-def update_goal_positions(goal, agent_id, agent_list, map_data):
-    agent_list[agent_id] = (agent_list[agent_id][1], goal)
-
-    # Erase previous path of the agent
-    MARKERS = ["S", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
-
-    for i, row in enumerate(map_data):
-        for j, cell in enumerate(row):
-            if cell == MARKERS[agent_id]:
-                map_data[i][j] = 0
-
-    GOAL_MARKERS = ["G", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"]
-
-    for i, row in enumerate(map_data):
-        for j, cell in enumerate(row):
-            if cell == GOAL_MARKERS[agent_id]:
-                map_data[i][j] = 0
-
-    # Update the new goal position
-    goal_x, goal_y = goal
-    map_data[goal_x][goal_y] = GOAL_MARKERS[agent_id]
-
-    return agent_list, map_data
-
 def update_map(map_data, agent_id, new_goal, current_position, original_map):
     # Erase previous path of the agent
 
@@ -119,11 +95,12 @@ def create_json_output(
     cumulative_map = [row.copy() for row in map_data]
 
     total_time = initial_time if initial_time is not None else None
+    number_of_agents = len(agent_files)
+    if (number_of_agents == 0):
+        number_of_agents = 1
+
     for turn in range(max_turns):
         turn_data = {}
-
-        # update new goal positions
-
 
         for i, (agent_id, data) in enumerate(agent_data.items()):
             if turn < len(data["path"]):
@@ -139,17 +116,12 @@ def create_json_output(
             x, y = position
             if (turn > 0):
                 # if the cell it's not goal or start
-                if (cumulative_map[x][y] != GOAL_MARKERS[i] and cumulative_map[x][y] != START_MARKERS[i]):
+                if (cumulative_map[x][y] not in GOAL_MARKERS and cumulative_map[x][y] not in START_MARKERS):
                     cumulative_map[x][y] = marker
 
             # Calculate waiting time and total time
             waiting_time = get_waiting_time(map_data, position)
             waiting_time = cast_to_int(waiting_time)
-
-            # Simulate time
-            if (data["time"] is not None and turn > 0):
-                data["time"] -= 1
-
             
 
             # Simulate fuel
@@ -166,18 +138,11 @@ def create_json_output(
             if position == data["goal"]:
                 data["reached"] = True
 
-            # print goal[i][turn] if turn < len(goal[i]) else data["goal"]
-            #print(goal_list[i])
-            #print(f"Agent {agent_id} at {position} with goal {goal_list[i][turn] if turn < len(goal_list[i]) else data['goal']}")
-                
-            # if the goal is updated, update the map
-
-
             turn_data[agent_id] = {
                 "position": position,
                 "goal": goal_list[i][turn] if turn < len(goal_list[i]) else data["goal"],
                 "fuel": data["fuel"],
-                "time": data["time"],
+                "time": initial_time - turn // number_of_agents if initial_time is not None else None,
                 "reached": data["reached"],
             }
 
@@ -188,6 +153,7 @@ def create_json_output(
         moves.append(
             {f"turn {turn}": turn_data, "map": [row.copy() for row in cumulative_map]}
         )
+    
 
     return {"moves": moves}
 
