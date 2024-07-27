@@ -11,7 +11,6 @@ class BFS(sol.SolutionBase):  # Level 1
 
     def solve(self):
         start, goal = self.agent_list[0]
-        # copy the original map
         original_map = self.map_data.copy()
 
         queue = [(start, [start])]
@@ -24,14 +23,12 @@ class BFS(sol.SolutionBase):  # Level 1
                 self.move_logs = self.trace_path(original_map, path)
                 return "\n".join([f"{x} {y}" for x, y in path[1:]])
             
-            if current in visited:
-                continue
+            if current not in visited:
+                visited.add(current)
 
-            visited.add(current)
-
-            for neighbor, _ in self.graph.get_neighbors(current):
-                if neighbor not in visited:
-                    queue.append((neighbor, path + [neighbor]))
+                for neighbor, _ in self.graph.get_neighbors(current):
+                    if neighbor not in visited:
+                        queue.append((neighbor, path + [neighbor]))
 
         return "FAIL"
 
@@ -77,8 +74,6 @@ class UCS(sol.SolutionBase):  # Level 1
     def solve(self):
         start, goal = self.agent_list[0]
         original_map = self.map_data.copy()
-
-
         queue = p_queue()
         queue.put((0, start, [start]))
         visited = set()
@@ -93,11 +88,14 @@ class UCS(sol.SolutionBase):  # Level 1
             if current in visited:
                 continue
 
-            visited.add(current)
+            if current not in visited:
+                visited.add(current)
 
-            for neighbor, weight in self.graph.get_neighbors(current):
-                if neighbor not in visited:
-                    queue.put((cost + weight, neighbor, path + [neighbor]))
+                for neighbor, weight in self.graph.get_neighbors(current):
+                    if neighbor not in visited:
+                        if self.map_data[neighbor[0]][neighbor[1]] != 0:
+                            weight += 1
+                        queue.put((cost + weight, neighbor, path + [neighbor]))
 
         return "FAIL"
 

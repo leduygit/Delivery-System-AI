@@ -71,20 +71,23 @@ def load_data(path):
 
 def run_solutions_on_maps():
     solutions = [
-        ("Level1", lv1.Astar, ["g", "agent_list", "grid"]),
-        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"]),
-        ("Level3", lv3.Level3, ["g", "agent_list", "grid", "time", "gas"]),
+        ("Level1", lv1.GBFS, ["g", "agent_list", "grid"], "gbfs"),
+        ("Level1", lv1.Astar, ["g", "agent_list", "grid"], "astar"),
+        ("Level1", lv1.DFS, ["g", "agent_list", "grid"], "dfs"),
+        ("Level1", lv1.BFS, ["g", "agent_list", "grid"], "bfs"),
+        ("Level1", lv1.UCS, ["g", "agent_list", "grid"], "ucs"),
+        ("Level2", lv2.Level2, ["g", "agent_list", "grid", "time"], "Level2"),
+        ("Level3", lv3.Level3, ["g", "agent_list", "grid", "time", "gas"], "Level3"),
     ]
     levels = ["lv1", "lv2", "lv3"]
 
     for map_name in MAP_NAME:
-        for solution_name, SolutionClass, init_args in solutions:
+        for solution_name, SolutionClass, init_args, algo_name in solutions:
             input_path = f"{MAP_FOLDER}lv{str(solution_name[-1])}/{map_name}.txt"
-            #print(input_path)
             grid, agent_list, time, gas = load_data(input_path)
             g = graph.GridGraph(grid)
 
-            #print(f"Running {solution_name} on {input_path}...")
+            print(f"Running {solution_name} {algo_name} on {input_path}...")
 
             # Dynamically prepare the arguments
             init_args_values = {
@@ -100,8 +103,10 @@ def run_solutions_on_maps():
             solution.solve()
             move_log_path = "search_logic/move.txt"
             solution.save_move_logs(move_log_path)
-
-            output_file = f"{JSON_FOLDER}lv{str(solution_name[-1])}/{map_name}.json"
+            if solution_name != "Level1":
+                output_file = f"{JSON_FOLDER}lv{str(solution_name[-1])}/{map_name}.json"
+            else:
+                output_file = f"{JSON_FOLDER}lv{str(solution_name[-1])}/{algo_name}/{map_name}.json"
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
             # Determine goal files or None if not applicable
