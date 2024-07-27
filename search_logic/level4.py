@@ -22,7 +22,7 @@ def is_valid_move(map, state, move):
            grid[nx][ny] != -1 and abs(nx - ox) + abs(ny - oy) == 1 \
            and state['gas'] > 0 and state['time'] > 0
 
-def apply_moves(map, state, move, index, original_state):
+def apply_moves(map, state, move, index):
     cur_x, cur_y = state['x'], state['y']
     goal = (state['goal_x'], state['goal_y'])
     grid = map['grid']
@@ -31,21 +31,16 @@ def apply_moves(map, state, move, index, original_state):
             state['x'], state['y'] = move
             return grid, state
         state['goal_x'], state['goal_y'] = get_new_goal(grid, (cur_x, cur_y))
-
-    x, y = move
-    if isinstance(original_state["map"][x][y], tuple):
-        #print("REFUELING", x, y)
-        state['gas'] = original_state["gas"]
-        state['wait'] = original_state["map"][x][y][1]
+    if isinstance(grid[move[0]][move[1]], tuple):
+        state['gas'] = map['gas']
+        state['wait'] = int(grid[move[0]][move[1]][1])
     else:
-        # if move to another cell then reduce gas
-        if move != (cur_x, cur_y):
-            state['gas'] -= 1
+        state['gas'] -= 1
 
-    if isinstance(original_state["map"][x][y], int):
+    if isinstance(grid[move[0]][move[1]], int):
         if state['wait'] > 0:
             raise ValueError("Error: Agent is waiting")
-        state['wait'] = original_state["map"][x][y]
+        state['wait'] = grid[move[0]][move[1]]
 
     state['time'] -= 1 
     state['x'], state['y'] = move
@@ -54,7 +49,6 @@ def apply_moves(map, state, move, index, original_state):
     else:
         grid[cur_x][cur_y] = map['sgrid'][cur_x][cur_y]
     grid[move[0]][move[1]] = 'S{}'.format(index)
-    print(state)
     return grid, state
 
 def print_current(states):
@@ -81,7 +75,7 @@ def get_new_goal(grid, current_position):
 
 def runner(filename):
     grid, start_positions, time, gas = load_data(filename)
-    initial_time = time
+    print(f"file {filename} time {time} gas {gas}")
     g = graph.GridGraph(grid)
 
     copy_grid = [list(row) for row in grid]
@@ -97,11 +91,8 @@ def runner(filename):
     current_positions = [pos[0] for pos in start_positions]
     current_goals = [pos[1] for pos in start_positions]
 
-
-
-
     # Initialize bots with the starting gas and time for each agent
-    bots = [bfs_bot(start_positions, copy_grid, time, gas) for _ in current_positions]
+    bots = [bfs_bot(grid, time, gas) for _ in current_positions]
     states = []
     for i, bot in enumerate(bots):
         states.append({
@@ -113,12 +104,6 @@ def runner(filename):
             'time': time,
             'wait': 0,
         })
-
-    original_state = {
-        'map': copy_grid,
-        'gas': gas,
-    }
-    
 
     for i, bot in enumerate(bots):
         with open("search_logic/agents/agent_{}.txt".format(i + 1), "w") as f:
@@ -132,16 +117,14 @@ def runner(filename):
         for i, bot in enumerate(bots):
             if states[i]['wait'] > 0:
                 states[i]['wait'] -= 1
-                states[i]['time'] -= 1
                 print_current(states)
                 continue
             move = bot.get_move(mmap, states[i])
-            #print(move)
-            if move is None:
-                states[i]['time'] -= 1
+            print(move)
+            if move is None or not is_valid_move(mmap, states[i], move):
                 print_current(states)
                 continue
-            mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i, original_state)
+            mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i)
             print_current(states)
             if i == 0 and states[i]['x'] == states[i]['goal_x'] and states[i]['y'] == states[i]['goal_y']:
                 done = True
@@ -152,6 +135,6 @@ def runner(filename):
     goal_files = [f"search_logic/agents/goal_{i+1}.txt" for i in range(len(bots))]
     output_file = filename.replace("Maps", "Json").replace(".txt", ".json") 
 
-    data = fo.create_json_output(copy_grid, input_files, goal_files, start_positions, gas, initial_time)
+    data = fo.create_json_output(copy_grid, input_files, goal_files, start_positions, gas, time)
     fo.save_to_json(data, output_file)
 
