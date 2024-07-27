@@ -28,17 +28,17 @@ def parse_goal_file(filename):
 
 def update_map(map_data, agent_id, new_goal, current_position, original_map):
 
+    if "_" in str(map_data[current_position[0]][current_position[1]]):
+        map_data[current_position[0]][current_position[1]] = map_data[current_position[0]][current_position[1]].split("_")[1]
+
     for i, row in enumerate(map_data):
         for j, cell in enumerate(row):
-            if cell == MARKERS[agent_id]:
-                if original_map[i][j] in (START_MARKERS[agent_id], GOAL_MARKERS[agent_id]):
-                    map_data[i][j] = 0
-                else:
-                    map_data[i][j] = original_map[i][j]
+            if MARKERS[agent_id] in str(cell):
+                map_data[i][j] = original_map[i][j]
             if cell in (START_MARKERS[agent_id], GOAL_MARKERS[agent_id]):
                 map_data[i][j] = 0
 
-    map_data[current_position[0]][current_position[1]] = START_MARKERS[agent_id]
+    map_data[current_position[0]][current_position[1]] = f"{MARKERS[agent_id]}_{START_MARKERS[agent_id]}"
 
     for i, row in enumerate(map_data):
         for j, cell in enumerate(row):
@@ -96,9 +96,12 @@ def create_json_output(
             cumulative_positions[agent_id].append(position)
             marker = MARKERS[i]
 
+            if "_" in str(cumulative_map[position[0]][position[1]]):
+                cumulative_map[position[0]][position[1]] = cumulative_map[position[0]][position[1]].split("_")[1]
+
             x, y = position
             if turn > 0 and cumulative_map[x][y] not in GOAL_MARKERS + START_MARKERS:
-                cumulative_map[x][y] = marker
+                cumulative_map[x][y] = f"{marker}_{(cumulative_map[x][y])}"
 
             if initial_fuel is not None and turn > 0 and position != data["path"][turn - 1]:
                 data["fuel"] -= 1
