@@ -24,7 +24,7 @@ class SolutionBase:
     
     def trace_path(self, map, path):
         move_logs = []
-        print(self.get_level())
+        #print(self.get_level())
         for i in range(len(path)):
             #print("trace_path")
             #print(i)
@@ -33,7 +33,7 @@ class SolutionBase:
             while value >= 0:
                 move_logs.append((path[i]))
                 value -= 1
-        print(move_logs)
+        #print(move_logs)
         return move_logs
 
     def get_level(self):
@@ -45,6 +45,7 @@ class SolutionBase:
     def save_move_logs(self, filename):
         with open(filename, "w") as file:
             if len(self.move_logs) == 0:
-                file.write(self.agent_list[0][0])
+                start, _ = self.agent_list[0]
+                file.write(f"{start[0]} {start[1]}")
             else:
                 file.write("\n".join([f"{x} {y}" for x, y in self.move_logs]))

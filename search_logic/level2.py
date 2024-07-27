@@ -7,12 +7,6 @@ class Level2(SolutionBase):
 
     def get_level(self):
         return 'lv2'
-
-    def trace_path(self, map, path):
-        move_logs = []
-        for i in range(len(path)):
-            move_logs.append((path[i]))
-        return move_logs
       
     def get_heuristic(self, node, goal):
         original_map = self.map_data.copy()
