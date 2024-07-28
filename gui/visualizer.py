@@ -8,7 +8,6 @@ from gui.sidebar import Sidebar
 from gui.menu import Menu  # Import the Menu class
 from gui.level_page import LevelPage  # Import the LevelPage class
 import warnings
-from PIL import Image
 
 warnings.filterwarnings("ignore", category=UserWarning, module="PIL")
 

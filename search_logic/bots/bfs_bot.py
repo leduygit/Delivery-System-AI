@@ -46,9 +46,6 @@ class BfsBot(BotBase):
 
         while not queue.empty():
             cost, time, current, current_gas, path = queue.get()
-            if (start == (8 ,2) and state['time'] == 86):  
-                print("Current state")
-                print((current, time, current_gas))
 
             if current == goal:
                 return path[0]
