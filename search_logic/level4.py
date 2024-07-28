@@ -56,7 +56,7 @@ def apply_moves(map, state, move, index, original_state, current_positions):
     else:
         grid[cur_x][cur_y] = map['sgrid'][cur_x][cur_y]
     grid[move[0]][move[1]] = 'S{}'.format(index)
-    print(state)
+    #print(state)
     return grid, state
 
 def print_current(states):
@@ -139,7 +139,7 @@ def runner(filename):
                 continue
             move = bot.get_move(mmap, states[i], current_positions)
             #print(move)
-            
+
             if move in current_positions and grid[move[0]][move[1]] != 'S{}'.format(i):
                 states[i]['time'] -= 1
                 print_current(states)
