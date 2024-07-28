@@ -101,7 +101,7 @@ class BfsBot(BotBase):
             if (next_move != None):
                 if (get_value(self.map[next_move[0]][next_move[1]]) > 0):
                     rand = random.randint(0, 100)
-                    if rand >= RATE:
+                    if rand <= RATE:
                         return None
 
             # if the number is less than RATE, then return a random move
@@ -143,5 +143,18 @@ class BfsBot(BotBase):
                         continue
                     visited.add((next_x, next_y))
                     queue.append(((next_x, next_y), dist + 1, path + [(next_x, next_y)]))
+
+        if next_move is None:
+            rand = random.randint(0, 100)
+            if rand >= RATE:
+                return None
+            directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+            next_move = random.choice(directions)
+            next_move = (state['x'] + next_move[0], state['y'] + next_move[1])
+
+            if next_move in current_pos and next_move != (state['x'], state['y']):
+                return None
+                
+            
 
         return next_move

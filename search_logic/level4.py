@@ -1,7 +1,7 @@
 import os
 from random import randint
 from search_logic.bots.bfs_bot import BfsBot as bfs_bot
-from search_logic.main import load_data
+from search_logic.logic import load_data
 import search_logic.format_output as fo
 import search_logic.graph as graph
 
