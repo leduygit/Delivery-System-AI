@@ -22,7 +22,7 @@ def is_valid_move(map, state, move):
            grid[nx][ny] != -1 and abs(nx - ox) + abs(ny - oy) == 1 \
            and state['gas'] > 0 and state['time'] > 0
 
-def apply_moves(map, state, move, index, original_state):
+def apply_moves(map, state, move, index, original_state, current_positions):
     cur_x, cur_y = state['x'], state['y']
     goal = (state['goal_x'], state['goal_y'])
     grid = map['grid']
@@ -46,6 +46,8 @@ def apply_moves(map, state, move, index, original_state):
         if state['wait'] > 0:
             raise ValueError("Error: Agent is waiting")
         state['wait'] = original_state["map"][x][y]
+    
+
 
     state['time'] -= 1 
     state['x'], state['y'] = move
@@ -135,17 +137,23 @@ def runner(filename):
                 states[i]['time'] -= 1
                 print_current(states)
                 continue
-            move = bot.get_move(mmap, states[i])
+            move = bot.get_move(mmap, states[i], current_positions)
             #print(move)
+            
+            if move in current_positions and grid[move[0]][move[1]] != 'S{}'.format(i):
+                states[i]['time'] -= 1
+                print_current(states)
+                continue
             if move is None:
                 states[i]['time'] -= 1
                 print_current(states)
                 continue
-            mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i, original_state)
+            mmap['grid'], states[i] = apply_moves(mmap, states[i], move, i, original_state, current_positions)
             print_current(states)
             if i == 0 and states[i]['x'] == states[i]['goal_x'] and states[i]['y'] == states[i]['goal_y']:
                 done = True
                 break
+            current_positions[i] = (states[i]['x'], states[i]['y'])
         time -= 1
 
     input_files = [f"search_logic/agents/agent_{i+1}.txt" for i in range(len(bots))]

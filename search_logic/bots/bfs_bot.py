@@ -1,5 +1,9 @@
 from search_logic.bots.base import BotBase
 from queue import PriorityQueue as pq
+from collections import deque
+import random
+
+RATE = 40   
 
 
 def get_value(value):
@@ -19,7 +23,7 @@ class BfsBot(BotBase):
         self.map = map.copy()
         self.goals = [agent[1] for agent in agent_list]
 
-    def bfsToGoal(self, map, state):
+    def bfsToGoal(self, map, state, current_pos):
         # return the next move to reach the goal
 
         start = (state['x'], state['y'])
@@ -58,15 +62,13 @@ class BfsBot(BotBase):
                 next_x = current[0] + direction[0]
                 next_y = current[1] + direction[1]
 
+
                 if next_x < 0 or next_x >= len(grid) or next_y < 0 or next_y >= len(grid[0]):
                     continue    
-
-                # if isinstance(grid[next_x][next_y], str) and grid[next_x][next_y] in MARKER and grid[next_x][next_y] != grid[current[0]][current[1]]:
-                #     # print(grid)
-                #     continue
+                #print(grid)
 
                 if isinstance(self.map[next_x][next_y], int) and self.map[next_x][next_y] == -1:
-                    continue                    
+                    continue     
 
                 map_value = get_value(self.map[next_x][next_y])
                 new_time = time - 1 - get_value(map_value)
@@ -91,7 +93,60 @@ class BfsBot(BotBase):
 
         return None
     
-    def get_move(self, map, state):
+    def get_move(self, map, state, current_pos):
         # return the next move for the agent
-        next_move = self.bfsToGoal(map, state)
+        next_move = self.bfsToGoal(map, state, current_pos)
+        if next_move is None or (next_move in current_pos and next_move != (state['x'], state['y'])):
+            # generate a random number < 100
+            if (state['gas'] == 0 or state['time'] == 0):
+                return None
+            
+
+            # assume that the agent is waiting
+            if (next_move != None):
+                if (get_value(self.map[next_move[0]][next_move[1]]) > 0):
+                    rand = random.randint(0, 100)
+                    if rand >= RATE:
+                        return None
+
+            # if the number is less than RATE, then return a random move
+            rand = random.randint(0, 100)
+            if rand >= RATE:
+                return None
+
+            # find neighboring cells with smallest cells distance to the goal
+
+            start = (state['x'], state['y'])
+            goal = (state['goal_x'], state['goal_y'])
+            min_dist = float('inf')
+
+            directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+            queue = deque()
+            queue.append((start, 0, []))
+            visited = set()
+
+            while queue:
+                current, dist, path = queue.popleft()
+                if current == goal:
+                    next_move = path[0]
+                    break
+
+                for direction in directions:
+                    next_x = current[0] + direction[0]
+                    next_y = current[1] + direction[1]
+
+                    if next_x < 0 or next_x >= len(map['grid']) or next_y < 0 or next_y >= len(map['grid'][0]):
+                        continue
+
+                    if isinstance(self.map[next_x][next_y], int) and self.map[next_x][next_y] == -1:
+                        continue
+
+                    if (next_x, next_y) in current_pos and (next_x, next_y) != (state['x'], state['y']):
+                        continue
+                    
+                    if ((next_x, next_y) in visited):
+                        continue
+                    visited.add((next_x, next_y))
+                    queue.append(((next_x, next_y), dist + 1, path + [(next_x, next_y)]))
+
         return next_move
