@@ -68,11 +68,13 @@ class Sidebar:
                 True,
                 sidebar_text_color,
             )
+            fuel_color = sidebar_text_color if player_data["fuel"] > 0 else (255, 0, 0)
             fuel_text = font.render(
-                f"FUEL: {player_data['fuel']}", True, sidebar_text_color
+                f"FUEL: {player_data['fuel']}", True, fuel_color
             )
+            time_color = sidebar_text_color if player_data["time"] > 0 else (255, 0, 0)
             time_text = font.render(
-                f"TIME: {player_data['time']}", True, sidebar_text_color
+                f"TIME: {player_data['time']}", True, time_color
             )
 
             player_image = pygame.transform.scale(
