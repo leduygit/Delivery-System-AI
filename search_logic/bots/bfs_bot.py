@@ -47,13 +47,10 @@ class BfsBot(BotBase):
         while not queue.empty():
             cost, time, current, current_gas, path = queue.get()
             if (start == (8 ,2) and state['time'] == 86):  
-                #print("Current state")
-                #print((current, time, current_gas))
+                print("Current state")
+                print((current, time, current_gas))
 
             if current == goal:
-                # return the next move from current to goal
-                # print(path)
-                #(path[0])
                 return path[0]
 
             directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -76,8 +73,6 @@ class BfsBot(BotBase):
 
                 if (type(self.map[next_x][next_y]) == tuple):
                     new_gas = self.gas
-                    if (start == (8 ,2)):
-                        print("GAS STATION")
                     #print(new_gas)
 
                 if new_time < 0 or new_gas < 0:
